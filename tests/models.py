@@ -196,3 +196,37 @@ class TestCaseSteps(models.Model):
 
     def get_absolute_url(self):
         return reverse("TestCaseSteps_detail", kwargs={"pk": self.pk})
+
+class TestPlans(models.Model):
+
+    testPlan_id = models.AutoField(_("Код тест-плана"), primary_key=True)
+    title = models.CharField(_("Название тест-плана"), max_length=50)
+    description = models.TextField(_("Описание тест-плана"))
+
+    class Meta:
+        verbose_name = _("Тест-план")
+        verbose_name_plural = _("Тест-планы")
+
+    def __str__(self):
+        return f'{{{self.testPlan_id}}} {self.title}'
+
+    def get_absolute_url(self):
+        return reverse("test_plan_detail", kwargs={"pk": self.pk})
+
+class TestCasePlans(models.Model):
+
+    testPlan = models.ForeignKey(TestPlans, verbose_name="Тест план", on_delete=models.PROTECT)
+    testCase = models.ForeignKey(TestCases, verbose_name="Тест-кейс", on_delete=models.PROTECT)
+    testCaseAssigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Назанчено"), on_delete=models.PROTECT)
+    estimatedTime = models.PositiveIntegerField(_("Время"))
+
+    class Meta:
+        verbose_name = _("TestCasePlans")
+        verbose_name_plural = _("TestCasePlanss")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("TestCasePlans_detail", kwargs={"pk": self.pk})
+
