@@ -213,20 +213,67 @@ class TestPlans(models.Model):
     def get_absolute_url(self):
         return reverse("test_plan_detail", kwargs={"pk": self.pk})
 
+class TestCaseResults(models.Model):
+
+    testCaseResult_name = models.CharField(_("Результат"), max_length=50)
+
+    class Meta:
+        verbose_name = _("Результат теста")
+        verbose_name_plural = _("Результаты тестов")
+
+    def __str__(self):
+        return self.testCaseResult_name
+
+    def get_absolute_url(self):
+        return reverse("test_case_result_detail", kwargs={"pk": self.pk})
+
+
 class TestCasePlans(models.Model):
 
     testPlan = models.ForeignKey(TestPlans, verbose_name="Тест план", on_delete=models.PROTECT)
     testCase = models.ForeignKey(TestCases, verbose_name="Тест-кейс", on_delete=models.PROTECT)
     testCaseAssigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Назанчено"), on_delete=models.PROTECT)
     estimatedTime = models.PositiveIntegerField(_("Время"))
+    testCaseResult = models.ForeignKey(TestCaseResults, verbose_name=_("Результат теста"), on_delete=models.PROTECT)
 
     class Meta:
-        verbose_name = _("TestCasePlans")
-        verbose_name_plural = _("TestCasePlanss")
+        verbose_name = _("Тест-кейс плана")
+        verbose_name_plural = _("Тест-кейсы плана")
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("TestCasePlans_detail", kwargs={"pk": self.pk})
+        return reverse("test_case_plan_detail", kwargs={"pk": self.pk})
+    
+class Tags(models.Model):
+
+    name = models.CharField(_("Тег"), max_length=50)
+
+    class Meta:
+        verbose_name = _("Тег")
+        verbose_name_plural = _("Теги")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("tag_detail", kwargs={"pk": self.pk})
+
+
+class TestCaseTags(models.Model):
+
+    testCase = models.ForeignKey(TestCases, verbose_name=_("Тест-кейс"), on_delete=models.PROTECT)
+    tag = models.ForeignKey(Tags, verbose_name=_("Тег"), on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = _("Тег тест-кейса")
+        verbose_name_plural = _("Теги тест-кейов")
+
+    def __str__(self):
+        return f'{self.testCase} #{self.tag}'
+
+    def get_absolute_url(self):
+        return reverse("test_case_tag_detail", kwargs={"pk": self.pk})
+
 
