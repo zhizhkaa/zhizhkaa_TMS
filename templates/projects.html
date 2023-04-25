@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mx-5 p-5">
+    <h2>Проекты</h2>
+    <div class="d-inline-flex flex-row align-items-center p-1">
+        <button type="button" class="btn btn-primary btn-sm p-2 text-nowrap">Новый проект +</button>
+        <div class="input-group p-2">
+            <input type="search" class="form-control rounded" placeholder="Поиск..." aria-label="Поиск..." aria-describedby="search-addon" />
+            <button type="button" class="btn btn-outline-primary">Поиск</button>
+        </div>
+        
+    </div>
+    {% for project in projects %}
+    <div class="mx-5 mt-4">
+        <h4> {{ project.project }} </h4>
+        
+        <hr>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}

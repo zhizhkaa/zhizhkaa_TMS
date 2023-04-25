@@ -48,6 +48,7 @@ class UserProjects(models.Model):
 
     def get_absolute_url(self):
         return reverse("user_project_detail", kwargs={"user": self.user, "project": self.project})
+    
 
 class TestSuites(models.Model):
 
