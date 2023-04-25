@@ -1,7 +1,12 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import UserProjects
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 # Create your views here.
 
-def index(request):
-    return render(request, 'index.html')
+@login_required
+def projects(request):
+    projects = UserProjects.objects.filter(user=request.user)
+    users_list = User.objects.all()
+    return render(request, 'projects.html', {'projects' : projects, 'users' : users_list})
