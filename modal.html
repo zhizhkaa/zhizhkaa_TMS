@@ -1,0 +1,40 @@
+<!-- FORM -->
+<form method="POST" class="modal fade" id="newProject" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"> {% csrf_token %}
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Новый проект</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- Модал -->
+        <div class="modal-body">
+            <div>Название проекта</div>
+            <div class="input-group input-group-sm mb-3">
+                
+                <!-- INPUT -->
+                {{ form }}
+                <!-- <input type="text" name="project_name" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm"> -->
+            
+            </div>
+            <div>Пользователи</div>
+            <select type="text" name="project_users" class="selectpicker" multiple title="Список пуст..." data-selected-text-format="count > 3" data-width="100%" multiple data-actions-box="true">
+                {% for user in user_list %}
+                <option>{{ user }}</option>
+                {% endfor %}
+            </select>     
+
+        </div>
+        <div class="modal-footer">
+            
+            <!-- Кнопка "Закрыть" -->
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+
+
+            <!-- Кнопка "Сохранить" -->
+            <button type="submit" href="new_project" class="btn btn-primary">Сохранить</button>
+        </div>
+      </div>
+    </div>
+</form>

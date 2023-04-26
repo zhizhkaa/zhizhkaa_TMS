@@ -13,7 +13,7 @@ class Projects(models.Model):
         primary_key=True, verbose_name=_("Код проекта"))
     
     project_name = models.CharField(max_length=50, verbose_name=_(
-        "Название проекта"), help_text="Название проекта")
+        "Название проекта"), help_text="Название проекта", blank=False)
 
     class Meta:
         verbose_name = _("Проект")
