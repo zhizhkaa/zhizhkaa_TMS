@@ -11,7 +11,7 @@ class Projects(models.Model):
     """
     project_id = models.AutoField(
         primary_key=True, verbose_name=_("Код проекта"))
-    
+
     project_name = models.CharField(max_length=50, verbose_name=_(
         "Название проекта"), help_text="Название проекта", blank=False)
 
@@ -26,18 +26,19 @@ class Projects(models.Model):
     def get_absolute_url(self):
         return reverse("project_detail", kwargs={"pk": self.pk})
 
+
 class UserProjects(models.Model):
     """
     Хранит связь пользователей с проектами
     """
     userProject_id = models.AutoField(
         primary_key=True, verbose_name="Код проект-пользователь")
-    
+
     project = models.ForeignKey(
-        Projects, on_delete=models.PROTECT, verbose_name="Проект")
-    
+        Projects, on_delete=models.CASCADE, verbose_name="Проект")
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_(
-        "Пользователь"), on_delete=models.PROTECT)
+        "Пользователь"), on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("Проект пользователя")
@@ -48,12 +49,14 @@ class UserProjects(models.Model):
 
     def get_absolute_url(self):
         return reverse("user_project_detail", kwargs={"user": self.user, "project": self.project})
-    
+
 
 class TestSuites(models.Model):
 
     testSuite_id = models.AutoField(_("Код набора"), primary_key=True)
     testSuite_name = models.CharField(_("Название набора"), max_length=50)
+    project = models.ForeignKey(Projects, verbose_name=_(
+        "Проект"), on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = _("Тестовй набор")
@@ -64,7 +67,8 @@ class TestSuites(models.Model):
 
     def get_absolute_url(self):
         return reverse("test_suite_detail", kwargs={"pk": self.pk})
-    
+
+
 class TestTypes(models.Model):
 
     testType_id = models.AutoField(_("Код типа"), primary_key=True)
@@ -79,6 +83,7 @@ class TestTypes(models.Model):
 
     def get_absolute_url(self):
         return reverse("test_type_detail", kwargs={"pk": self.pk})
+
 
 class TestPriorities(models.Model):
 
@@ -95,6 +100,7 @@ class TestPriorities(models.Model):
     def get_absolute_url(self):
         return reverse("test_priority_detail", kwargs={"pk": self.pk})
 
+
 class TestStatuses(models.Model):
 
     testStatus_id = models.AutoField(_("Код статуса"), primary_key=True)
@@ -110,6 +116,7 @@ class TestStatuses(models.Model):
     def get_absolute_url(self):
         return reverse("test_status_detail", kwargs={"pk": self.pk})
 
+
 class TestCases(models.Model):
 
     testCase_id = models.AutoField(_("Код тест-кейса"), primary_key=True)
@@ -119,7 +126,8 @@ class TestCases(models.Model):
     title = models.CharField(_("Название"), max_length=100)
     precondition = models.TextField(_("Предусловия"), blank=True, null=True)
     description = models.TextField(_("Описание"), blank=True, null=True)
-    expectedResult = models.TextField(_("Ожидаемый результат"), blank=True, null=True)
+    expectedResult = models.TextField(
+        _("Ожидаемый результат"), blank=True, null=True)
 
     """
     Параметры тест кейса:
@@ -132,11 +140,15 @@ class TestCases(models.Model):
     """
     project = models.ForeignKey(Projects, verbose_name=_(
         "Проект"), on_delete=models.PROTECT)
-    
-    suite = models.ForeignKey(TestSuites, verbose_name=_("Группа"), on_delete=models.PROTECT)
-    type = models.ForeignKey(TestTypes, verbose_name=_("Тип теста"), on_delete=models.PROTECT)
-    priority = models.ForeignKey(TestPriorities, verbose_name=_("Приоритет"), on_delete=models.PROTECT)
-    status = models.ForeignKey(TestStatuses, verbose_name=_("Статус"), on_delete=models.PROTECT, default=3)
+
+    suite = models.ForeignKey(TestSuites, verbose_name=_(
+        "Группа"), on_delete=models.PROTECT)
+    type = models.ForeignKey(TestTypes, verbose_name=_(
+        "Тип теста"), on_delete=models.PROTECT)
+    priority = models.ForeignKey(TestPriorities, verbose_name=_(
+        "Приоритет"), on_delete=models.PROTECT)
+    status = models.ForeignKey(TestStatuses, verbose_name=_(
+        "Статус"), on_delete=models.PROTECT, default=3)
     isAutomated = models.BooleanField(_("Автоматизирован"))
 
     """
@@ -144,7 +156,7 @@ class TestCases(models.Model):
     """
     caseCreated_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="Создатель", on_delete=models.PROTECT, related_name='created_by')
-    
+
     caseCreated_date = models.DateTimeField(_("Создано"), auto_now_add=True)
 
     """
@@ -152,7 +164,7 @@ class TestCases(models.Model):
     """
     caseLastModified_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="Последние изменения", on_delete=models.PROTECT, related_name='modified_by')
-    
+
     caseLastModified_date = models.DateTimeField(_("Изменено"), auto_now=True)
 
     class Meta:
@@ -164,11 +176,13 @@ class TestCases(models.Model):
 
     def get_absolute_url(self):
         return reverse("test_case_detail", kwargs={"pk": self.pk})
-    
+
+
 class TestSteps(models.Model):
 
     testStep_id = models.AutoField(_("Код шага"), primary_key=True)
-    project = models.ForeignKey(Projects, verbose_name=_("Проект"), on_delete=models.PROTECT)
+    project = models.ForeignKey(Projects, verbose_name=_(
+        "Проект"), on_delete=models.PROTECT)
     description = models.CharField(_("Описание шага"), max_length=100)
     expectedResult = models.TextField(_("Ожидаемый результат"))
 
@@ -182,10 +196,13 @@ class TestSteps(models.Model):
     def get_absolute_url(self):
         return reverse("test_step_detail", kwargs={"pk": self.pk})
 
+
 class TestCaseSteps(models.Model):
 
-    testCase = models.ForeignKey(TestCases, verbose_name=_("Тест-кейс"), on_delete=models.PROTECT)
-    testStep = models.ForeignKey(TestSteps, verbose_name=_("Шаг"), on_delete=models.CASCADE)
+    testCase = models.ForeignKey(TestCases, verbose_name=_(
+        "Тест-кейс"), on_delete=models.PROTECT)
+    testStep = models.ForeignKey(
+        TestSteps, verbose_name=_("Шаг"), on_delete=models.CASCADE)
     testCaseStep_num = models.PositiveIntegerField(_("Номер шага"))
 
     class Meta:
@@ -197,6 +214,7 @@ class TestCaseSteps(models.Model):
 
     def get_absolute_url(self):
         return reverse("TestCaseSteps_detail", kwargs={"pk": self.pk})
+
 
 class TestPlans(models.Model):
 
@@ -213,6 +231,7 @@ class TestPlans(models.Model):
 
     def get_absolute_url(self):
         return reverse("test_plan_detail", kwargs={"pk": self.pk})
+
 
 class TestCaseResults(models.Model):
 
@@ -231,11 +250,15 @@ class TestCaseResults(models.Model):
 
 class TestCasePlans(models.Model):
 
-    testPlan = models.ForeignKey(TestPlans, verbose_name="Тест план", on_delete=models.PROTECT)
-    testCase = models.ForeignKey(TestCases, verbose_name="Тест-кейс", on_delete=models.PROTECT)
-    testCaseAssigned_to = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=_("Назанчено"), on_delete=models.PROTECT)
+    testPlan = models.ForeignKey(
+        TestPlans, verbose_name="Тест план", on_delete=models.PROTECT)
+    testCase = models.ForeignKey(
+        TestCases, verbose_name="Тест-кейс", on_delete=models.PROTECT)
+    testCaseAssigned_to = models.ForeignKey(
+        settings.AUTH_USER_MODEL, verbose_name=_("Назанчено"), on_delete=models.PROTECT)
     estimatedTime = models.PositiveIntegerField(_("Время"))
-    testCaseResult = models.ForeignKey(TestCaseResults, verbose_name=_("Результат теста"), on_delete=models.PROTECT)
+    testCaseResult = models.ForeignKey(TestCaseResults, verbose_name=_(
+        "Результат теста"), on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = _("Тест-кейс плана")
@@ -246,7 +269,8 @@ class TestCasePlans(models.Model):
 
     def get_absolute_url(self):
         return reverse("test_case_plan_detail", kwargs={"pk": self.pk})
-    
+
+
 class Tags(models.Model):
 
     name = models.CharField(_("Тег"), max_length=50)
@@ -264,8 +288,10 @@ class Tags(models.Model):
 
 class TestCaseTags(models.Model):
 
-    testCase = models.ForeignKey(TestCases, verbose_name=_("Тест-кейс"), on_delete=models.PROTECT)
-    tag = models.ForeignKey(Tags, verbose_name=_("Тег"), on_delete=models.CASCADE)
+    testCase = models.ForeignKey(TestCases, verbose_name=_(
+        "Тест-кейс"), on_delete=models.PROTECT)
+    tag = models.ForeignKey(Tags, verbose_name=_("Тег"),
+                            on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _("Тег тест-кейса")
@@ -276,5 +302,3 @@ class TestCaseTags(models.Model):
 
     def get_absolute_url(self):
         return reverse("test_case_tag_detail", kwargs={"pk": self.pk})
-
-

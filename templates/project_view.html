@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+        <div class="px-5 pt-5">
+            <h4>{{ project }}</h4>
+            <!-- Новый набор -->
+            <button type="button"
+                    class="btn btn-primary btn-sm p-2 text-nowrap"
+                    data-toggle="modal"
+                    data-target="#newSuite">Новый набор +</button>
+            <form method="post"
+                  class="modal fade needs-validation"
+                  id="newSuite"
+                  tabindex="-1"
+                  role="dialog"
+                  aria-labelledby="newSuiteModalLabel"
+                  aria-hidden="true">
+                {% csrf_token %}
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newSuiteModalLabel">Новый набор</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <!-- Модал -->
+                        <div class="modal-body">
+                            <label for="validationCustom01">Название набора</label>
+                            <div class="input-group input-group-sm mb-3 has-validation">
+                                <!-- INPUT -->
+                                <input type="text"
+                                       name="suite_name"
+                                       class="form-control"
+                                       aria-label="Small"
+                                       aria-describedby="inputGroup-sizing-sm"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- Кнопка "Закрыть" -->
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            <!-- Кнопка "Сохранить" -->
+                            <button type="submit" href="new_suite" class="btn btn-primary">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- Новый тест-кейс -->
+            <button type="button"
+                    class="btn btn-primary btn-sm p-2 text-nowrap"
+                    data-toggle="modal"
+                    data-target="#newTestCase">Новый тест-кейс +</button>
+            <form method="post"
+                  class="modal fade needs-validation"
+                  id="newTestCase"
+                  tabindex="-1"
+                  role="dialog"
+                  aria-labelledby="newTestCaseLabel"
+                  aria-hidden="true">
+                {% csrf_token %}
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="newTestCaseLabel">Новый тест-кейс</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <!-- Модал -->
+                        <div class="modal-body">
+                            <label for="validationCustom01">Название тест-кейса</label>
+                            <div class="input-group input-group-sm mb-3 has-validation">
+                                <!-- INPUT -->
+                                <input type="text"
+                                       name="suite_name"
+                                       class="form-control"
+                                       aria-label="Small"
+                                       aria-describedby="inputGroup-sizing-sm"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- Кнопка "Закрыть" -->
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            <!-- Кнопка "Сохранить" -->
+                            <button type="submit" href="new_testCase" class="btn btn-primary">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="d-flex mx-5" style="height: 75vh;">
+            <div class="w-25 p-3 border-right">
+                <h5>Наборы</h5>
+                {% for suite in suite_list %}
+                    <div>
+                        <a data-toggle="collapse" href="#collapse_{{ forloop.counter }}">- {{ suite }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="w-75 p-3">
+                <div class="d-flex">
+                    <!-- <input type="checkbox"> -->
+                    <h5>Тесты</h5>
+                </div>
+                {% for suite_tests in suite_test_list %}
+                    <div class="collapse" id="collapse_{{ forloop.counter }}">
+                        {% for test in suite_tests %}
+                           <div>{{ test }}</div>
+                           <hr>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock content %}
