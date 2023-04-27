@@ -69,7 +69,8 @@ def project_view(request, project_pk):
     for suite_iter in suite_list:
         suite_test_list.append(list(TestCases.objects.filter(suite=suite_iter, project=project_pk).order_by('title')))
 
-    print(suite_test_list)
-    print(request.POST)
-
     return render(request, 'project_view.html', {'project': project, 'suite_list': suite_list, 'suite_test_list': suite_test_list})
+
+def testCase_view(request, project_pk, testCase_pk):
+
+    return render(request, 'testCase_view.html')

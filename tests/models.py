@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import re
 from django.conf import settings
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -25,6 +26,10 @@ class Projects(models.Model):
 
     def get_absolute_url(self):
         return reverse("project_detail", kwargs={"pk": self.pk})
+    
+    def acronym(self):
+        regex = re.compile('[^а-яА-Яa-zA-Z]')
+        return "".join(e[0].upper() for e in regex.sub(' ', self.project_name).split())
 
 
 class UserProjects(models.Model):

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-    <div>
-        <div class="px-5 pt-5">
+    <div class="bg-light">
+        <div class="p-4 px-5 bg-white shadow-sm">
             <h4>{{ project }}</h4>
             <!-- Новый набор -->
             <button type="button"
@@ -90,28 +90,45 @@
                 </div>
             </form>
         </div>
-        <div class="d-flex mx-5" style="height: 75vh;">
-            <div class="w-25 p-3 border-right">
+        <div class="d-flex"  style="height: 75vh;">
+            <div class="w-25 border-right pt-3 px-5">
                 <h5>Наборы</h5>
-                {% for suite in suite_list %}
-                    <div>
-                        <a data-toggle="collapse" href="#collapse_{{ forloop.counter }}">- {{ suite }}</a>
-                    </div>
-                {% endfor %}
+                {% if suite_list %}
+                    {% for suite in suite_list %}
+                        <div>
+                            <a data-toggle="collapse"
+                               href="#collapse_{{ forloop.counter }}"
+                               class="text-dark">- {{ suite }}</a>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-danger">Нет наборов</div>
+                {% endif %}
             </div>
-            <div class="w-75 p-3">
+            <div class="w-75 pt-3 px-5">
                 <div class="d-flex">
-                    <!-- <input type="checkbox"> -->
                     <h5>Тесты</h5>
                 </div>
-                {% for suite_tests in suite_test_list %}
-                    <div class="collapse" id="collapse_{{ forloop.counter }}">
-                        {% for test in suite_tests %}
-                           <div>{{ test }}</div>
-                           <hr>
+                {% if suite_test_list %}
+                    {% with acronym=project.acronym %}
+                        {% for suite_tests in suite_test_list %}
+                            <div class="collapse show" id="collapse_{{ forloop.counter }}" >
+                                {% for test in suite_tests %}
+                                    <div class="d-flex flex-row">
+                                        <input type="checkbox">
+                                        <a class="d-flex flex-row" href="{% url 'testCase_view' project_pk=project.project_id testCase_pk=test.testCase_id %}">
+                                            <div class="mx-2 text-secondary">{{ acronym }}-{{ test.testCase_id }}</div>
+                                            <div class="mx-1">{{ test.title }}</div>
+                                        </a>
+                                    </div>
+                                    <hr class="m-1">
+                                {% endfor %}
+                            </div>
                         {% endfor %}
-                    </div>
-                {% endfor %}
+                    {% endwith %}
+                {% else %}
+                    <div>Нет тестов :(</div>
+                {% endif %}
             </div>
         </div>
     </div>
