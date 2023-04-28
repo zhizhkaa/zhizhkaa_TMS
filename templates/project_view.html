@@ -96,9 +96,14 @@
                 {% if suite_list %}
                     {% for suite in suite_list %}
                         <div>
-                            <a data-toggle="collapse"
-                               href="#collapse_{{ forloop.counter }}"
-                               class="text-dark">- {{ suite }}</a>
+                            <div class="d-flex align-items-center text-dark">
+                                <input data-toggle="collapse"
+                                       href="#collapse_{{ forloop.counter }}"
+                                       type="checkbox"
+                                       name="suiteSelect"
+                                       checked>
+                                <div class="ml-2">{{ suite }}</div>
+                            </div>
                         </div>
                     {% endfor %}
                 {% else %}
@@ -106,29 +111,55 @@
                 {% endif %}
             </div>
             <div class="w-75 pt-3 px-5">
-                <div class="d-flex">
+                <div class="d-flex align-items-center">
+                    <script language="JavaScript">
+                        function toggle(source) {
+                            checkboxes = document.getElementsByName('testSelect');
+                            for(var i=0, n=checkboxes.length;i<n;i++) {
+                              checkboxes[i].checked = source.checked;
+                            }
+                        }
+                    </script>
+                    <input type="checkbox" onClick="toggle(this)" class="mr-2">
                     <h5>Тесты</h5>
                 </div>
                 {% if suite_test_list %}
-                    {% with acronym=project.acronym %}
+                    {% with projectAcronym=project.acronym %}
                         {% for suite_tests in suite_test_list %}
                             <div class="collapse show" id="collapse_{{ forloop.counter }}">
-                                {% for test in suite_tests %}
-                                    <div class="d-flex flex-row">
-                                        <input type="checkbox">
-                                        <a class="d-flex flex-row"
-                                           href=""
-                                           data-toggle="modal"
-                                           data-target="#testCaseModal_{{ test.testCase_id }}">
-                                            <div class="mx-2 text-secondary">{{ acronym }}-{{ test.testCase_id }}</div>
-                                            <div class="mx-1">{{ test.title }}</div>
-                                        </a>
-                                    </div>
-                                    <hr class="m-1">
-                                    {% include 'testCase_modal.html' %}
-                                    {% block testCaseModal %}
-                                    {% endblock testCaseModal %}
-                                {% endfor %}
+                                <table class="table">
+                                    {% for test in suite_tests %}
+                                        {% with suiteAcronym=test.suite.acronym %}
+                                            <tr>
+                                                <th scope="row">
+                                                    <input type="checkbox" name="testSelect">
+                                                </th>
+                                                <td>{{ projectAcronym }}-{{ test.testCase_id }}</td>
+                                                <td>{{ suiteAcronym }}</td>
+                                                <td>
+                                                    <a class="d-flex flex-row"
+                                                       href=""
+                                                       data-toggle="modal"
+                                                       data-target="#testCaseModal_{{ test.testCase_id }}">{{ test.title }}</a>
+                                                </td>
+                                            </tr>
+                                            <!--
+                                        <div class="d-flex flex-row">
+                                            <input type="checkbox" name="testSelect">
+                                            <a class="d-flex flex-row" href="" data-toggle="modal" data-target="#testCaseModal_{{ test.testCase_id }}">
+                                                <div class="mx-2 text-secondary">{{ projectAcronym }}-{{ test.testCase_id }}</div>
+                                                <div class="mr-2 text-secondary">{{ suiteAcronym }}</div>
+                                                <div class="mx-1">{{ test.title }}</div>
+                                            </a>
+                                        </div>
+                                        <hr class="m-1">
+                                    -->
+                                            {% include 'testCase_modal.html' %}
+                                            {% block testCaseModal %}
+                                            {% endblock testCaseModal %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                </table>
                             </div>
                         {% endfor %}
                     {% endwith %}

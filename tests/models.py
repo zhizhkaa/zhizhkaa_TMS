@@ -73,6 +73,10 @@ class TestSuites(models.Model):
     def get_absolute_url(self):
         return reverse("test_suite_detail", kwargs={"pk": self.pk})
 
+    def acronym(self):
+        regex = re.compile('[^а-яА-Яa-zA-Z]')
+        return "".join(e[0].upper() for e in regex.sub(' ', self.testSuite_name).split())
+
 
 class TestTypes(models.Model):
 
