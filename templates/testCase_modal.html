@@ -1,0 +1,68 @@
+{% block testCaseModal %}
+    <div class="modal fade"
+         id="testCaseModal_{{ test.testCase_id }}"
+         tabindex="-1"
+         role="dialog"
+         aria-labelledby="#testCaseModalLabel_{{ test.testCase_id }}"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-slideout" role="document">
+            <div class="modal-content h-100">
+                <div class="modal-header">
+                    <div class="modal-title" id="testCaseModalLabel_{{ test.testCase_id }}">
+                        <div class="text-secondary mb-1">{{ acronym }}-{{ test.testCase_id }}</div>
+                        <h4>{{ test.title }}</h4>
+                        <div class="d-flex flex-row">
+                            <button type="button" class="btn btn-sm btn-outline-secondary mr-2">Переименовть</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary mr-2">Изменить</button>
+                            <button type="button" class="btn btn-sm btn btn-outline-danger mr-2">Удалить</button>
+                        </div>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body overflow-auto">
+                    <div id="description" class="pb-3">
+                        <div class="font-weight-bold">Описание</div>
+                        {% if test.description %}
+                            <div class="text-break">{{ test.description }}</div>
+                        {% else %}
+                            <div class="text-secondary">Отсутсвует</div>
+                        {% endif %}
+                    </div>
+                    <div id="preconditions" class="pb-3">
+                        <div class="font-weight-bold">Предусловия</div>
+                        {% if test.precondition %}
+                            <div class="text-wrap">{{ test.precondition }}</div>
+                        {% else %}
+                            <div class="text-secondary">Отсутствуют</div>
+                        {% endif %}
+                    </div>
+                    <div id="expectedResult" class="pb-3">
+                        <div class="font-weight-bold">Ожидаемый результат</div>
+                        {% if test.expectedResult %}
+                            <div class="text-wrap">{{ test.expectedResult }}</div>
+                        {% else %}
+                            <div class="text-secondary">Отсутствуют</div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(function() {
+            $('#testCaseModal_{{ test.testCase_id }}').find('.modal-content').resizable({
+                handles: 'w', 
+                minWidth: 500, 
+                maxWidth: 1000,
+                stop: function(event, ui) {
+                    $(this).css("height", '100%');
+                }
+            });
+        });
+    </script>
+{% endblock %}

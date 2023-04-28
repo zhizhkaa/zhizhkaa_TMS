@@ -71,6 +71,3 @@ def project_view(request, project_pk):
 
     return render(request, 'project_view.html', {'project': project, 'suite_list': suite_list, 'suite_test_list': suite_test_list})
 
-def testCase_view(request, project_pk, testCase_pk):
-
-    return render(request, 'testCase_view.html')

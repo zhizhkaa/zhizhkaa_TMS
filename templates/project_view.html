@@ -112,16 +112,22 @@
                 {% if suite_test_list %}
                     {% with acronym=project.acronym %}
                         {% for suite_tests in suite_test_list %}
-                            <div class="collapse show" id="collapse_{{ forloop.counter }}" >
+                            <div class="collapse show" id="collapse_{{ forloop.counter }}">
                                 {% for test in suite_tests %}
                                     <div class="d-flex flex-row">
                                         <input type="checkbox">
-                                        <a class="d-flex flex-row" href="{% url 'testCase_view' project_pk=project.project_id testCase_pk=test.testCase_id %}">
+                                        <a class="d-flex flex-row"
+                                           href=""
+                                           data-toggle="modal"
+                                           data-target="#testCaseModal_{{ test.testCase_id }}">
                                             <div class="mx-2 text-secondary">{{ acronym }}-{{ test.testCase_id }}</div>
                                             <div class="mx-1">{{ test.title }}</div>
                                         </a>
                                     </div>
                                     <hr class="m-1">
+                                    {% include 'testCase_modal.html' %}
+                                    {% block testCaseModal %}
+                                    {% endblock testCaseModal %}
                                 {% endfor %}
                             </div>
                         {% endfor %}
