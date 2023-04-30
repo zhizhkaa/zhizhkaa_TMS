@@ -1,0 +1,51 @@
+{% block testCaseTable %}
+    <div id="tests" class="w-75 border-left pt-3 px-5">
+        <div class="d-flex align-items-center">
+            <script language="JavaScript">
+    function toggle(source) {
+        checkboxes = document.getElementsByName('testSelect');
+        for(var i=0, n=checkboxes.length;i<n;i++) {
+          checkboxes[i].checked = source.checked;
+        }
+    }
+            </script>
+            <input type="checkbox" onClick="toggle(this)" class="mr-2">
+            <h5>Тесты</h5>
+        </div>
+        {% if suite_test_list %}
+            {% with projectAcronym=project.acronym %}
+                {% for suite_name, test_list in suite_test_list.items %}
+                    {% if test_list %}
+                        <style>
+                a[aria-expanded='false'] > .fa-caret-down  {
+                    transform: scale(1) rotate(-90deg);
+                }
+                        </style>
+                        <div class="collapse show" id="collapse_{{ forloop.counter }}">
+                            {% for test in test_list %}
+                                <div class="d-flex flex-row">
+                                    <input type="checkbox" name="testSelect">
+                                    <a class="d-flex flex-row"
+                                       href=""
+                                       data-toggle="modal"
+                                       data-target="#testCaseModal_{{ test.testCase_id }}">
+                                        <div class="mx-2 text-secondary">{{ projectAcronym }}-{{ test.testCase_id }}</div>
+                                        <div class="mx-1">{{ test.title }}</div>
+                                    </a>
+                                </div>
+                                <hr class="m-1">
+                                {% include 'testCase_modal.html' %}
+
+                                {% block testCaseModal %}
+                                {% endblock testCaseModal %}
+                                
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}
+        {% else %}
+            <div>Нет тестов :(</div>
+        {% endif %}
+    </div>
+{% endblock %}

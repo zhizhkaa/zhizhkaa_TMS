@@ -46,6 +46,20 @@
                             <div class="text-secondary">Отсутствуют</div>
                         {% endif %}
                     </div>
+                    <div id="testCaseSteps" class="pb-3">
+                        <div class="font-weight-bold">Шаги</div>
+                        {% with steps=testCaseSteps|get_item:test.testCase_id %}
+                            {% if steps %}
+                                {% for step in testCaseSteps|get_item:test.testCase_id %}
+                                    <div class="pb-2">
+                                        <span class="badge badge-secondary">{{ step.testCaseStep_num }}</span> {{ step.testStep }}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="text-secondary">Отсутсвуют</div>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>

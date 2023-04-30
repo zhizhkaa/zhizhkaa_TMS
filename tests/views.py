@@ -1,11 +1,16 @@
-from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
 
-from .models import UserProjects, Projects, TestCases, TestSuites
+from .models import UserProjects, Projects, TestCases, TestSuites, TestCaseSteps
 from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import login_required
+from django.template.defaulttags import register
 from django.db.models import Q
 
+@register.filter
+def get_item(dictionary, key):
+    return dictionary[key]
 
 def create_project(request):
 
@@ -30,6 +35,7 @@ def create_project(request):
 def projects(request):
     if request.method == "POST":
         create_project(request.POST)
+        return redirect(request.META['HTTP_REFERER'])
 
     # Отображение списка проектов
     projects = UserProjects.objects.filter(user=request.user)
@@ -53,21 +59,36 @@ def projects_search_results(request):
 
 
 def create_suite(request, project):
-    suite = TestSuites(testSuite_name=request.get('suite_name'), project=project)
+    suite = TestSuites(testSuite_name=request.get(
+        'suite_name'), project=project)
     suite.save()
 
-def project_view(request, project_pk):    
+def project_view(request, project_pk):
     project = Projects.objects.get(project_id=project_pk)
 
     if request.method == "POST":
         create_suite(request.POST, project)
+        return redirect(request.META['HTTP_REFERER'])
 
     suite_list = TestSuites.objects.filter(project=project_pk)
 
-    suite_test_list = list()
+    suite_test_list = dict()
+    testCaseSteps = dict()
 
     for suite_iter in suite_list:
-        suite_test_list.append(list(TestCases.objects.filter(suite=suite_iter, project=project_pk).order_by('title')))
+        tests = TestCases.objects.filter(
+            suite=suite_iter, project=project_pk).order_by('title')
 
-    return render(request, 'project_view.html', {'project': project, 'suite_list': suite_list, 'suite_test_list': suite_test_list})
+        suite_test_list[suite_iter.testSuite_name] = tests
 
+        for test in tests:
+            testCaseSteps[test.testCase_id] = TestCaseSteps.objects.filter(
+                testCase__project=project, testCase=test)
+
+    return render(request, 'project_view.html', {
+        'project': project, 
+        'suite_list': suite_list, 
+        'suite_test_list': suite_test_list, 
+        'testCaseSteps': testCaseSteps
+        }
+    )
