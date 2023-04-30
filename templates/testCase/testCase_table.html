@@ -28,13 +28,13 @@
                                     <a class="d-flex flex-row"
                                        href=""
                                        data-toggle="modal"
-                                       data-target="#testCaseModal_{{ test.testCase_id }}">
-                                        <div class="mx-2 text-secondary">{{ projectAcronym }}-{{ test.testCase_id }}</div>
+                                       data-target="#testCaseModal_{{ test.id }}">
+                                        <div class="mx-2 text-secondary">{{ projectAcronym }}-{{ test.id }}</div>
                                         <div class="mx-1">{{ test.title }}</div>
                                     </a>
                                 </div>
                                 <hr class="m-1">
-                                {% include 'testCase_modal.html' %}
+                                {% include 'testCase/testCase_modal.html' %}
 
                                 {% block testCaseModal %}
                                 {% endblock testCaseModal %}

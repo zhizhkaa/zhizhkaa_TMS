@@ -10,33 +10,33 @@ class Projects(models.Model):
     """
     Хранит список проектов
     """
-    project_id = models.AutoField(
+    id = models.AutoField(
         primary_key=True, verbose_name=_("Код проекта"))
 
-    project_name = models.CharField(max_length=50, verbose_name=_(
+    name = models.CharField(max_length=50, verbose_name=_(
         "Название проекта"), help_text="Название проекта", blank=False)
 
     class Meta:
         verbose_name = _("Проект")
         verbose_name_plural = _("Проекты")
-        ordering = ['project_name']
+        ordering = ['name']
 
     def __str__(self):
-        return self.project_name
+        return self.name
 
     def get_absolute_url(self):
         return reverse("project_detail", kwargs={"pk": self.pk})
     
     def acronym(self):
         regex = re.compile('[^а-яА-Яa-zA-Z]')
-        return "".join(e[0].upper() for e in regex.sub(' ', self.project_name).split())
+        return "".join(e[0].upper() for e in regex.sub(' ', self.name).split())
 
 
 class UserProjects(models.Model):
     """
     Хранит связь пользователей с проектами
     """
-    userProject_id = models.AutoField(
+    id = models.AutoField(
         primary_key=True, verbose_name="Код проект-пользователь")
 
     project = models.ForeignKey(
@@ -58,8 +58,8 @@ class UserProjects(models.Model):
 
 class TestSuites(models.Model):
 
-    testSuite_id = models.AutoField(_("Код набора"), primary_key=True)
-    testSuite_name = models.CharField(_("Название набора"), max_length=50)
+    id = models.AutoField(_("Код набора"), primary_key=True)
+    name = models.CharField(_("Название набора"), max_length=50)
     project = models.ForeignKey(Projects, verbose_name=_(
         "Проект"), on_delete=models.PROTECT)
 
@@ -68,27 +68,27 @@ class TestSuites(models.Model):
         verbose_name_plural = _("Тестовые наборы")
 
     def __str__(self):
-        return self.testSuite_name
+        return self.name
 
     def get_absolute_url(self):
         return reverse("test_suite_detail", kwargs={"pk": self.pk})
 
     def acronym(self):
         regex = re.compile('[^а-яА-Яa-zA-Z]')
-        return "".join(e[0].upper() for e in regex.sub(' ', self.testSuite_name).split())
+        return "".join(e[0].upper() for e in regex.sub(' ', self.name).split())
 
 
 class TestTypes(models.Model):
 
-    testType_id = models.AutoField(_("Код типа"), primary_key=True)
-    testType_name = models.CharField(_("Тип"), max_length=50)
+    id = models.AutoField(_("Код типа"), primary_key=True)
+    name = models.CharField(_("Тип"), max_length=50)
 
     class Meta:
         verbose_name = _("Тип теста")
         verbose_name_plural = _("Типы тестов")
 
     def __str__(self):
-        return self.testType_name
+        return self.name
 
     def get_absolute_url(self):
         return reverse("test_type_detail", kwargs={"pk": self.pk})
@@ -96,8 +96,8 @@ class TestTypes(models.Model):
 
 class TestPriorities(models.Model):
 
-    testPriority_id = models.AutoField(_("Код приоритета"), primary_key=True)
-    testPriority_name = models.CharField(_("Приоритет"), max_length=50)
+    id = models.AutoField(_("Код приоритета"), primary_key=True)
+    name = models.CharField(_("Приоритет"), max_length=50)
 
     class Meta:
         verbose_name = _("Приоритет")
@@ -112,15 +112,15 @@ class TestPriorities(models.Model):
 
 class TestStatuses(models.Model):
 
-    testStatus_id = models.AutoField(_("Код статуса"), primary_key=True)
-    testStatus_name = models.CharField(_("Статус"), max_length=50)
+    id = models.AutoField(_("Код статуса"), primary_key=True)
+    name = models.CharField(_("Статус"), max_length=50)
 
     class Meta:
         verbose_name = _("Статус теста")
         verbose_name_plural = _("Статусы тестов")
 
     def __str__(self):
-        return self.testStatus_name
+        return self.name
 
     def get_absolute_url(self):
         return reverse("test_status_detail", kwargs={"pk": self.pk})
@@ -128,7 +128,7 @@ class TestStatuses(models.Model):
 
 class TestCases(models.Model):
 
-    testCase_id = models.AutoField(_("Код тест-кейса"), primary_key=True)
+    id = models.AutoField(_("Код тест-кейса"), primary_key=True)
     """
     Описание тест-кейса
     """
@@ -163,25 +163,25 @@ class TestCases(models.Model):
     """
     Кем и когда создано
     """
-    caseCreated_by = models.ForeignKey(
+    created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="Создатель", on_delete=models.PROTECT, related_name='created_by')
 
-    caseCreated_date = models.DateTimeField(_("Создано"), auto_now_add=True)
+    created_date = models.DateTimeField(_("Создано"), auto_now_add=True)
 
     """
     Кем и когда модифицировано
     """
-    caseLastModified_by = models.ForeignKey(
+    lastModified_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name="Последние изменения", on_delete=models.PROTECT, related_name='modified_by')
 
-    caseLastModified_date = models.DateTimeField(_("Изменено"), auto_now=True)
+    lastModified_date = models.DateTimeField(_("Изменено"), auto_now=True)
 
     class Meta:
         verbose_name = _("Тест-кейс")
         verbose_name_plural = _("Тест-кейсы")
 
     def __str__(self):
-        return f'[{self.testCase_id}] {self.title}'
+        return f'[{self.id}] {self.title}'
 
     def get_absolute_url(self):
         return reverse("test_case_detail", kwargs={"pk": self.pk})
@@ -189,7 +189,7 @@ class TestCases(models.Model):
 
 class TestSteps(models.Model):
 
-    testStep_id = models.AutoField(_("Код шага"), primary_key=True)
+    id = models.AutoField(_("Код шага"), primary_key=True)
     project = models.ForeignKey(Projects, verbose_name=_(
         "Проект"), on_delete=models.PROTECT)
     description = models.CharField(_("Описание шага"), max_length=100)
@@ -212,14 +212,14 @@ class TestCaseSteps(models.Model):
         "Тест-кейс"), on_delete=models.PROTECT)
     testStep = models.ForeignKey(
         TestSteps, verbose_name=_("Шаг"), on_delete=models.CASCADE)
-    testCaseStep_num = models.PositiveIntegerField(_("Номер шага"))
+    index_num = models.PositiveIntegerField(_("Номер шага"))
 
     class Meta:
         verbose_name = _("Шаги тест-кейса")
         verbose_name_plural = _("Шаги тест-кейсов")
 
     def __str__(self):
-        return f'{self.testCase}: {self.testCaseStep_num} - {self.testStep}'
+        return f'{self.testCase}: {self.index_num} - {self.testStep}'
 
     def get_absolute_url(self):
         return reverse("TestCaseSteps_detail", kwargs={"pk": self.pk})
@@ -227,7 +227,7 @@ class TestCaseSteps(models.Model):
 
 class TestPlans(models.Model):
 
-    testPlan_id = models.AutoField(_("Код тест-плана"), primary_key=True)
+    id = models.AutoField(_("Код тест-плана"), primary_key=True)
     title = models.CharField(_("Название тест-плана"), max_length=50)
     description = models.TextField(_("Описание тест-плана"))
 
@@ -236,7 +236,7 @@ class TestPlans(models.Model):
         verbose_name_plural = _("Тест-планы")
 
     def __str__(self):
-        return f'{{{self.testPlan_id}}} {self.title}'
+        return f'{{{self.id}}} {self.title}'
 
     def get_absolute_url(self):
         return reverse("test_plan_detail", kwargs={"pk": self.pk})
@@ -244,14 +244,14 @@ class TestPlans(models.Model):
 
 class TestCaseResults(models.Model):
 
-    testCaseResult_name = models.CharField(_("Результат"), max_length=50)
+    name = models.CharField(_("Результат"), max_length=50)
 
     class Meta:
         verbose_name = _("Результат теста")
         verbose_name_plural = _("Результаты тестов")
 
     def __str__(self):
-        return self.testCaseResult_name
+        return self.name
 
     def get_absolute_url(self):
         return reverse("test_case_result_detail", kwargs={"pk": self.pk})
@@ -263,10 +263,10 @@ class TestCasePlans(models.Model):
         TestPlans, verbose_name="Тест план", on_delete=models.PROTECT)
     testCase = models.ForeignKey(
         TestCases, verbose_name="Тест-кейс", on_delete=models.PROTECT)
-    testCaseAssigned_to = models.ForeignKey(
+    assigned_to = models.ForeignKey(
         settings.AUTH_USER_MODEL, verbose_name=_("Назанчено"), on_delete=models.PROTECT)
     estimatedTime = models.PositiveIntegerField(_("Время"))
-    testCaseResult = models.ForeignKey(TestCaseResults, verbose_name=_(
+    result = models.ForeignKey(TestCaseResults, verbose_name=_(
         "Результат теста"), on_delete=models.PROTECT)
 
     class Meta:
@@ -282,14 +282,14 @@ class TestCasePlans(models.Model):
 
 class Tags(models.Model):
 
-    name = models.CharField(_("Тег"), max_length=50)
+    tag_name = models.CharField(_("Тег"), max_length=50)
 
     class Meta:
         verbose_name = _("Тег")
         verbose_name_plural = _("Теги")
 
     def __str__(self):
-        return self.name
+        return self.tag_name
 
     def get_absolute_url(self):
         return reverse("tag_detail", kwargs={"pk": self.pk})

@@ -83,7 +83,7 @@
         {% if project_list %}
             {% for project in project_list %}
                 <div class="mx-5 mt-4">
-                    <a class="h4" href="{% url 'project_view' project_pk=project.project_id%}">{{ project.project }}</a>
+                    <a class="h4" href="{% url 'project_view' project_pk=project.id%}">{{ project.project }}</a>
                     <hr>
                 </div>
             {% endfor %}

@@ -17,8 +17,10 @@ def create_project(request):
     project_name = request.get('project_name')
 
     if project_name:
-        project = Projects(project_name=project_name)
+        # Cоздаём проект
+        project = Projects(name=project_name)
         project.save()
+        
         # Добавляем пользователей к созданному проекту
         users_list = request.getlist('project_users')
         if users_list:
@@ -58,13 +60,13 @@ def projects_search_results(request):
     return render(request, 'projects_search_results.html', {'project_list': projects_searh_list, 'user_list': users_list})
 
 
-def create_suite(request, project):
+def create_suite(request, project_req):
     suite = TestSuites(testSuite_name=request.get(
-        'suite_name'), project=project)
+        'suite_name'), project=project_req)
     suite.save()
 
 def project_view(request, project_pk):
-    project = Projects.objects.get(project_id=project_pk)
+    project = Projects.objects.get(id=project_pk)
 
     if request.method == "POST":
         create_suite(request.POST, project)
@@ -79,10 +81,10 @@ def project_view(request, project_pk):
         tests = TestCases.objects.filter(
             suite=suite_iter, project=project_pk).order_by('title')
 
-        suite_test_list[suite_iter.testSuite_name] = tests
+        suite_test_list[suite_iter.name] = tests
 
         for test in tests:
-            testCaseSteps[test.testCase_id] = TestCaseSteps.objects.filter(
+            testCaseSteps[test.id] = TestCaseSteps.objects.filter(
                 testCase__project=project, testCase=test)
 
     return render(request, 'project_view.html', {
