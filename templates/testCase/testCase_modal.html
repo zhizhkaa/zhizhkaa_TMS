@@ -16,49 +16,110 @@
                             <button type="button" class="btn btn-sm btn-outline-secondary mr-2">Изменить</button>
                             <button type="button" class="btn btn-sm btn btn-outline-danger mr-2">Удалить</button>
                         </div>
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <button class="nav-link active"
+                                        id="nav-description-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#nav-description"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="nav-description"
+                                        aria-selected="true">Описание</button>
+                                <button class="nav-link"
+                                        id="nav-properties-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#nav-properties"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="nav-properties"
+                                        aria-selected="false">Свойства</button>
+                                <button class="nav-link"
+                                        id="nav-history-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#nav-history"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="nav-history"
+                                        aria-selected="false">История</button>
+                            </div>
+                        </nav>
                     </div>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
                 <div class="modal-body overflow-auto">
-                    <div id="description" class="pb-3">
-                        <div class="font-weight-bold">Описание</div>
-                        {% if test.description %}
-                            <div class="text-break">{{ test.description }}</div>
-                        {% else %}
-                            <div class="text-secondary">Отсутсвует</div>
-                        {% endif %}
-                    </div>
-                    <div id="preconditions" class="pb-3">
-                        <div class="font-weight-bold">Предусловия</div>
-                        {% if test.precondition %}
-                            <div class="text-wrap">{{ test.precondition }}</div>
-                        {% else %}
-                            <div class="text-secondary">Отсутствуют</div>
-                        {% endif %}
-                    </div>
-                    <div id="expectedResult" class="pb-3">
-                        <div class="font-weight-bold">Ожидаемый результат</div>
-                        {% if test.expectedResult %}
-                            <div class="text-wrap">{{ test.expectedResult }}</div>
-                        {% else %}
-                            <div class="text-secondary">Отсутствуют</div>
-                        {% endif %}
-                    </div>
-                    <div id="testCaseSteps" class="pb-3">
-                        <div class="font-weight-bold">Шаги</div>
-                        {% with steps=testCaseSteps|get_item:test.id %}
-                            {% if steps %}
-                                {% for step in steps %}
-                                    <div class="pb-2">
-                                        <span class="badge badge-secondary">{{ step.index_num }}</span> {{ step.testStep }}
-                                    </div>
-                                {% endfor %}
-                            {% else %}
-                                <div class="text-secondary">Отсутсвуют</div>
-                            {% endif %}
-                        {% endwith %}
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade show active"
+                             id="nav-description"
+                             role="tabpanel"
+                             aria-labelledby="nav-description-tab">
+                            <div id="description" class="pb-3">
+                                <div>
+                                    <strong>Описание</strong>
+                                </div>
+                                {% if test.description %}
+                                    <div class="text-break">{{ test.description }}</div>
+                                {% else %}
+                                    <div class="text-secondary">Отсутсвует</div>
+                                {% endif %}
+                            </div>
+                            <div id="preconditions" class="pb-3">
+                                <div>
+                                    <strong>Предусловия</strong>
+                                </div>
+                                {% if test.precondition %}
+                                    <div class="text-wrap">{{ test.precondition }}</div>
+                                {% else %}
+                                    <div class="text-secondary">Отсутствуют</div>
+                                {% endif %}
+                            </div>
+                            <div id="expectedResult" class="pb-3">
+                                <div>
+                                    <strong>Ожидаемый результат</strong>
+                                </div>
+                                {% if test.expectedResult %}
+                                    <div class="text-wrap">{{ test.expectedResult }}</div>
+                                {% else %}
+                                    <div class="text-secondary">Отсутствуют</div>
+                                {% endif %}
+                            </div>
+                            <div id="testCaseSteps" class="pb-3">
+                                <div>
+                                    <strong>Шаги</strong>
+                                </div>
+                                {% with steps=testCaseSteps|get_item:test.id %}
+                                    {% if steps %}
+                                        {% for step in steps %}
+                                            <div class="d-flex my-2">
+                                                <div class="mx-3">
+                                                    <span class="badge bg-secondary">{{ step.index_num }}</span>
+                                                </div>
+                                                <!-- TODO: Разобраться почему не работает justify-content-between -->
+                                                <div class="d-flex justify-content-between">
+                                                    <div>{{ step.testStep }}</div>
+                                                    <div>
+                                                        <div class="fa-solid fa-caret-down"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="text-secondary">Отсутсвуют</div>
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+                        </div>
+                        <div class="tab-pane fade"
+                             id="nav-properties"
+                             role="tabpanel"
+                             aria-labelledby="nav-properties-tab">...</div>
+                        <div class="tab-pane fade"
+                             id="nav-history"
+                             role="tabpanel"
+                             aria-labelledby="nav-history-tab">...</div>
                     </div>
                 </div>
             </div>
@@ -66,8 +127,8 @@
     </div>
     <script>
         $(function() {
-            $('#testCaseModal_{{ test.testCase_id }}').find('.modal-content').resizable({
-                handles: 'w', 
+            $('.modal-content').resizable({
+                handles: 'w',
                 minWidth: 500, 
                 maxWidth: 1000,
                 stop: function(event, ui) {

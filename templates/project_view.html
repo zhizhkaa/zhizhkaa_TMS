@@ -5,9 +5,9 @@
             <h4>{{ project }}</h4>
             <!-- Новый набор -->
             <button type="button"
-                    class="btn btn-primary btn-sm p-2 text-nowrap"
-                    data-toggle="modal"
-                    data-target="#newSuite">Новый набор +</button>
+                    class="btn btn-primary btn-sm text-nowrap"
+                    data-bs-toggle="modal"
+                    data-bs-target="#newSuite">Новый набор +</button>
             <form method="post"
                   class="modal fade needs-validation"
                   id="newSuite"
@@ -20,9 +20,10 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newSuiteModalLabel">Новый набор</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                         </div>
                         <!-- Модал -->
                         <div class="modal-body">
@@ -39,7 +40,7 @@
                         </div>
                         <div class="modal-footer">
                             <!-- Кнопка "Закрыть" -->
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                             <!-- Кнопка "Сохранить" -->
                             <button type="submit" href="new_suite" class="btn btn-primary">Сохранить</button>
                         </div>
@@ -48,9 +49,9 @@
             </form>
             <!-- Новый тест-кейс -->
             <button type="button"
-                    class="btn btn-primary btn-sm p-2 text-nowrap"
-                    data-toggle="modal"
-                    data-target="#newTestCase">Новый тест-кейс +</button>
+                    class="btn btn-primary btn-sm text-nowrap"
+                    data-bs-toggle="modal"
+                    data-bs-target="#newTestCase">Новый тест-кейс +</button>
             <form method="post"
                   class="modal fade needs-validation"
                   id="newTestCase"
@@ -63,9 +64,10 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="newTestCaseLabel">Новый тест-кейс</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                         </div>
                         <!-- Модал -->
                         <div class="modal-body">
@@ -82,7 +84,7 @@
                         </div>
                         <div class="modal-footer">
                             <!-- Кнопка "Закрыть" -->
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                             <!-- Кнопка "Сохранить" -->
                             <button type="submit" href="new_testCase" class="btn btn-primary">Сохранить</button>
                         </div>
@@ -91,29 +93,26 @@
             </form>
         </div>
         <div class="d-flex flex-row"  style="height: 75vh;">
-            <div id="suites"class="pt-3 px-5">
-                <h5>Наборы</h5>
+            <div id="suites"class="pt-3 px-5 w-25">
+                <p class="mb-2 h5">Наборы</p>
                 {% if suite_test_list %}
                     {% for suite_name, test_list in suite_test_list.items %}
-                        <i class="more-less glyphicon glyphicon-plus"></i>
-                        <a class="d-flex align-items-center font-weight-bold text-dark"
-                           data-toggle="collapse"
+                        <a class="d-flex align-items-center text-dark text-decoration-none"
+                           data-bs-toggle="collapse"
                            href="#collapse_{{ forloop.counter }}"
-                           name="suiteSelect"
-                           style="text-decoration: none;
-                                  important">
+                           name="suiteSelect">
                             <i class="fa-solid fa-caret-down"></i>
-                            <div class="ml-2">{{ suite_name }}</div>
+                            <div class="m-1">{{ suite_name }}</div>
                         </a>
                     {% endfor %}
                 {% else %}
                     <div class="text-danger">Нет наборов</div>
                 {% endif %}
             </div>
+            <div class="vr"></div>
             {% include "testCase/testCase_table.html" %}
             {% block testCaseTabel %}
             {% endblock testCaseTabel %}
-            <script></script>
         </div>
     </div>
 {% endblock content %}

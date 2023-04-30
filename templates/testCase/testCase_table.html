@@ -1,6 +1,6 @@
 {% block testCaseTable %}
-    <div id="tests" class="w-75 border-left pt-3 px-5">
-        <div class="d-flex align-items-center">
+    <div id="tests" class="w-75 pt-3 px-5">
+        <div class="mb-2">
             <script language="JavaScript">
     function toggle(source) {
         checkboxes = document.getElementsByName('testSelect');
@@ -9,8 +9,10 @@
         }
     }
             </script>
-            <input type="checkbox" onClick="toggle(this)" class="mr-2">
-            <h5>Тесты</h5>
+            <div class="d-flex flex-row">
+                <input type="checkbox" onClick="toggle(this)" class=""> 
+                <p class="mx-2 mb-0 h5">Тесты</p>
+            </div>
         </div>
         {% if suite_test_list %}
             {% with projectAcronym=project.acronym %}
@@ -25,20 +27,18 @@
                             {% for test in test_list %}
                                 <div class="d-flex flex-row">
                                     <input type="checkbox" name="testSelect">
-                                    <a class="d-flex flex-row"
+                                    <a class="d-flex flex-row text-decoration-none"
                                        href=""
-                                       data-toggle="modal"
-                                       data-target="#testCaseModal_{{ test.id }}">
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#testCaseModal_{{ test.id }}">
                                         <div class="mx-2 text-secondary">{{ projectAcronym }}-{{ test.id }}</div>
                                         <div class="mx-1">{{ test.title }}</div>
                                     </a>
                                 </div>
                                 <hr class="m-1">
                                 {% include 'testCase/testCase_modal.html' %}
-
                                 {% block testCaseModal %}
                                 {% endblock testCaseModal %}
-                                
                             {% endfor %}
                         </div>
                     {% endif %}

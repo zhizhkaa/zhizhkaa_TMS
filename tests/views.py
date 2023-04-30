@@ -51,17 +51,19 @@ def projects_search_results(request):
     if request.method == "POST":
         create_project(request.POST)
 
-    query = request.GET.get('search')
+    if request.method == 'GET':
+        query = request.GET.get('search')
+        print(query)
+        projects_searh_list = UserProjects.objects.filter(Q(user=request.user), Q(project__name__icontains=query))
 
-    projects_searh_list = UserProjects.objects.filter(
-        Q(user=request.user), Q(project__project_name__icontains=query))
+    
     users_list = User.objects.all()
 
     return render(request, 'projects_search_results.html', {'project_list': projects_searh_list, 'user_list': users_list})
 
 
 def create_suite(request, project_req):
-    suite = TestSuites(testSuite_name=request.get(
+    suite = TestSuites(name=request.get(
         'suite_name'), project=project_req)
     suite.save()
 
