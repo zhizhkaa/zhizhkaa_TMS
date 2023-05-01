@@ -7,134 +7,44 @@
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-slideout" role="document">
             <div class="modal-content h-100">
-                <div class="modal-header">
+                <div class="modal-header pb-0 w-100">
                     <div class="modal-title" id="testCaseModalLabel_{{ test.id }}">
-                        <div class="text-secondary mb-1">{{ projectAcronym }}-{{ test.id }}</div>
-                        <h4>{{ test.title }}</h4>
-                        <div class="d-flex flex-row">
-                            <button type="button" class="btn btn-sm btn-outline-secondary mr-2">Переименовть</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary mr-2">Изменить</button>
-                            <button type="button" class="btn btn-sm btn btn-outline-danger mr-2">Удалить</button>
+                        <div class="text-secondary mb-1 d-flex justify-content-between align-items-center">
+                            {{ projectAcronym }}-{{ test.id }}
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                         </div>
-                        <nav>
-                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <button class="nav-link active"
-                                        id="nav-description-tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#nav-description"
-                                        type="button"
-                                        role="tab"
-                                        aria-controls="nav-description"
-                                        aria-selected="true">Описание</button>
-                                <button class="nav-link"
-                                        id="nav-properties-tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#nav-properties"
-                                        type="button"
-                                        role="tab"
-                                        aria-controls="nav-properties"
-                                        aria-selected="false">Свойства</button>
-                                <button class="nav-link"
-                                        id="nav-history-tab"
-                                        data-bs-toggle="tab"
-                                        data-bs-target="#nav-history"
-                                        type="button"
-                                        role="tab"
-                                        aria-controls="nav-history"
-                                        aria-selected="false">История</button>
-                            </div>
-                        </nav>
+                        <h4>{{ test.title }}</h4>
+                        <div class="d-flex flex-row mb-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary me-2">Переименовть</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary me-2">Изменить</button>
+                            <button type="button" class="btn btn-sm btn btn-outline-danger me-2">Удалить</button>
+                        </div>
+                        <!-- Нав бар -->
+                        {% include 'testCase/navPages/navBar.html' %}
+                        {% block navBar %}
+                        {% endblock navBar %}
                     </div>
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
                 </div>
                 <div class="modal-body overflow-auto">
                     <div class="tab-content" id="nav-tabContent">
-                        <div class="tab-pane fade show active"
-                             id="nav-description"
-                             role="tabpanel"
-                             aria-labelledby="nav-description-tab">
-                            <div id="description" class="pb-3">
-                                <div>
-                                    <strong>Описание</strong>
-                                </div>
-                                {% if test.description %}
-                                    <div class="text-break">{{ test.description }}</div>
-                                {% else %}
-                                    <div class="text-secondary">Отсутсвует</div>
-                                {% endif %}
-                            </div>
-                            <div id="preconditions" class="pb-3">
-                                <div>
-                                    <strong>Предусловия</strong>
-                                </div>
-                                {% if test.precondition %}
-                                    <div class="text-wrap">{{ test.precondition }}</div>
-                                {% else %}
-                                    <div class="text-secondary">Отсутствуют</div>
-                                {% endif %}
-                            </div>
-                            <div id="expectedResult" class="pb-3">
-                                <div>
-                                    <strong>Ожидаемый результат</strong>
-                                </div>
-                                {% if test.expectedResult %}
-                                    <div class="text-wrap">{{ test.expectedResult }}</div>
-                                {% else %}
-                                    <div class="text-secondary">Отсутствуют</div>
-                                {% endif %}
-                            </div>
-                            <div id="testCaseSteps" class="pb-3">
-                                <div>
-                                    <strong>Шаги</strong>
-                                </div>
-                                {% with steps=testCaseSteps|get_item:test.id %}
-                                    {% if steps %}
-                                        {% for step in steps %}
-                                            <div class="d-flex my-2">
-                                                <div class="mx-3">
-                                                    <span class="badge bg-secondary">{{ step.index_num }}</span>
-                                                </div>
-                                                <!-- TODO: Разобраться почему не работает justify-content-between -->
-                                                <div class="d-flex justify-content-between">
-                                                    <div>{{ step.testStep }}</div>
-                                                    <div>
-                                                        <div class="fa-solid fa-caret-down"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        {% endfor %}
-                                    {% else %}
-                                        <div class="text-secondary">Отсутсвуют</div>
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
-                        </div>
-                        <div class="tab-pane fade"
-                             id="nav-properties"
-                             role="tabpanel"
-                             aria-labelledby="nav-properties-tab">...</div>
-                        <div class="tab-pane fade"
-                             id="nav-history"
-                             role="tabpanel"
-                             aria-labelledby="nav-history-tab">...</div>
+                        <!-- Описание тест-кейса -->
+                        {% include 'testCase/navPages/description.html' %}
+                        {% block description %}
+                        {% endblock description %}
+                        <!-- Свойства тест-кейса -->
+                        {% include 'testCase/navPages/properties.html' %}
+                        {% block properties %}
+                        {% endblock properties %}
+                        <!-- История изменений тест-кейса -->
+                        {% include 'testCase/navPages/history.html' %}
+                        {% block history %}
+                        {% endblock history %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-        $(function() {
-            $('.modal-content').resizable({
-                handles: 'w',
-                minWidth: 500, 
-                maxWidth: 1000,
-                stop: function(event, ui) {
-                    $(this).css("height", '100%');
-                }
-            });
-        });
-    </script>
 {% endblock %}

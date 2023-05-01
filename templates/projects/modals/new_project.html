@@ -1,0 +1,59 @@
+{% block new_project %}
+
+<!-- Модал -->
+<!-- FORM -->
+<form method="post"
+      class="modal fade needs-validation"
+      id="newProject"
+      tabindex="-1"
+      aria-labelledby="newProjectModalLabel"
+      aria-hidden="true">
+    {% csrf_token %}
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newProjectModalLabel">Новый проект</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <!-- Модал -->
+            <div class="modal-body">
+                <label for="validationCustom01">Название проекта</label>
+                <div class="input-group input-group-sm mb-3 has-validation">
+                    <!-- Название нового проекта -->
+                    <input type="text"
+                           name="project_name"
+                           class="form-control"
+                           aria-label="Small"
+                           aria-describedby="inputGroup-sizing-sm"
+                           required>
+                </div>
+                <!-- Пользователи нового проекта -->
+                <div>Пользователи</div>
+                <select class="selectpicker "
+                        multiple
+                        aria-label="size 3 select example"
+                        type="text"
+                        name="project_users"
+                        title="Список пуст..."
+                        data-selected-text-format="count > 3"
+                        data-width="100%"
+                        multiple
+                        data-actions-box="true"
+                        data-action-width="100%"
+                        required>
+                    {% for user in user_list %}<option>{{ user }}</option>{% endfor %}
+                </select>
+            </div>
+            <div class="modal-footer">
+                <!-- Кнопка "Закрыть" -->
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                <!-- Кнопка "Сохранить" -->
+                <button type="submit" href="new_project" class="btn btn-primary">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock new_project %}

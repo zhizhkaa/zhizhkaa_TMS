@@ -9,15 +9,15 @@ models = apps.get_models()
 class TestCasesAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         instance = form.save(commit=False)
-        if not hasattr(instance, 'caseCreated_by'):
-            instance.caseCreated_by = request.user
-        obj.caseLastModified_by = request.user
+        if not hasattr(instance, 'created_by'):
+            instance.created_by = request.user
+        obj.lastModified_by = request.user
         obj.save()
 
-    list_display = ('testCase_id', 'title', 'project', 'isAutomated', 'caseCreated_by',
-                    'caseCreated_date', 'caseLastModified_by', 'caseLastModified_date')
-    readonly_fields = ('caseCreated_by', 'caseCreated_date',
-                       'caseLastModified_by', 'caseLastModified_date')
+    list_display = ('id', 'title', 'project', 'isAutomated', 'created_by',
+                    'created_date', 'lastModified_by', 'lastModified_date')
+    readonly_fields = ('created_by', 'created_date',
+                       'lastModified_by', 'lastModified_date')
     fieldsets = (
         (None, {
             'fields': (('title', 'status'), 'precondition', 'description', 'expectedResult')
@@ -29,13 +29,13 @@ class TestCasesAdmin(admin.ModelAdmin):
 
 #@admin.register(TestCaseSteps)
 class TestCaseStepsAdmin(admin.ModelAdmin):
-    list_display = ('testCase', 'testStep', 'testCaseStep_num')
+    list_display = ('testCase', 'testStep', 'index_num')
     fieldsets = (
         (None, {
             'fields': ('testCase',)
         }),
         (None, {
-            'fields': (('testCaseStep_num', 'testStep'),)
+            'fields': (('index_num', 'testStep'),)
         }),
     )
 

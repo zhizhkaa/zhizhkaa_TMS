@@ -1,0 +1,41 @@
+{% block new_testCase %}
+    <form method="post"
+          class="modal fade needs-validation"
+          id="newTestCase"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="newTestCaseLabel"
+          aria-hidden="true">
+        {% csrf_token %}
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newTestCaseLabel">Новый тест-кейс</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <!-- Модал -->
+                <div class="modal-body">
+                    <label for="validationCustom01">Название тест-кейса</label>
+                    <div class="input-group input-group-sm mb-3 has-validation">
+                        <!-- INPUT -->
+                        <input type="text"
+                               name="suite_name"
+                               class="form-control"
+                               aria-label="Small"
+                               aria-describedby="inputGroup-sizing-sm"
+                               required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!-- Кнопка "Закрыть" -->
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <!-- Кнопка "Сохранить" -->
+                    <button type="submit" href="new_testCase" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock new_testCase %}

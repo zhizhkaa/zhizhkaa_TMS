@@ -1,0 +1,30 @@
+{% block navBar %}
+<nav>
+    <div class="nav nav-tabs w-100" id="nav-tab" role="tablist">
+        <button class="nav-link active"
+                id="nav-description-tab_{{ test.id }}"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-description_{{ test.id }}"
+                type="button"
+                role="tab"
+                aria-controls="nav-description_{{ test.id }}"
+                aria-selected="true">Описание</button>
+        <button class="nav-link"
+                id="nav-properties-tab_{{ test.id }}"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-properties_{{ test.id }}"
+                type="button"
+                role="tab"
+                aria-controls="nav-properties_{{ test.id }}"
+                aria-selected="false">Свойства</button>
+        <button class="nav-link"
+                id="nav-history-_{{ test.id }}"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-history_{{ test.id }}"
+                type="button"
+                role="tab"
+                aria-controls="nav-history_{{ test.id }}"
+                aria-selected="false">История</button>
+    </div>
+</nav>
+{% endblock navBar %}

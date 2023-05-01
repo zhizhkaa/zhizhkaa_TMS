@@ -1,0 +1,49 @@
+{% block properties %}
+    <div class="tab-pane fade р-100"
+         id="nav-properties_{{ test.id }}"
+         role="tabpanel"
+         aria-labelledby="nav-properties-tab">
+        <div id="testProject" class="pb-3">
+            <div>
+                <strong>Проект</strong>
+            </div>
+            <div class="text-break">{{ test.project }}</div>
+        </div>
+        <div id="testSuite" class="pb-3">
+            <div>
+                <strong>Набор</strong>
+            </div>
+            <div class="text-break">{{ test.suite }}</div>
+        </div>
+        <div id="testType" class="pb-3">
+            <div>
+                <strong>Тип теста</strong>
+            </div>
+            <div class="text-break">{{ test.type }}</div>
+        </div>
+        <div id="testPriority" class="pb-3">
+            <div>
+                <strong>Приоритет</strong>
+            </div>
+            <div class="text-break">{{ test.priority }}</div>
+        </div>
+        <div id="testStatus" class="pb-3">
+            <div>
+                <strong>Статус</strong>
+            </div>
+            <div class="text-break">{{ test.status }}</div>
+        </div>
+        <div id="testIsAutomated" class="pb-3">
+            <div>
+                <strong>Автоматизирован</strong>
+            </div>
+            <div class="text-break">
+                {% if test.isAutomated %}
+                    Да
+                {% else %}
+                    Нет
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock properties %}

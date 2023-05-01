@@ -18,21 +18,30 @@
         <link rel="stylesheet"
               href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
         <style>
-        .modal-dialog-slideout {
-                min-height: 100%;
-                margin: 0 0 0 auto;
-        }
-        .modal.fade .modal-dialog.modal-dialog-slideout {
-                -webkit-transform: translate(100%, 0)scale(1);
-                transform: translate(100%, 0)scale(1);
-        }
-        .modal.fade.show .modal-dialog.modal-dialog-slideout {
-                height: 100%;
-                -webkit-transform: translate(0, 0);
-                transform: translate(0, 0);
-                align-items: stretch;
-                -webkit-box-align: stretch;
-        }
+                .modal-header {
+                        border-bottom: 0;
+                }
+                .modal-dialog-slideout {
+                        min-height: 100%;
+                        margin: 0 0 0 auto;
+                }
+                .modal.fade .modal-dialog.modal-dialog-slideout {
+                        -webkit-transform: translate(100%, 0)scale(1);
+                        transform: translate(100%, 0)scale(1);
+                }
+                .modal.fade.show .modal-dialog.modal-dialog-slideout {
+                        height: 100%;
+                        -webkit-transform: translate(0, 0);
+                        transform: translate(0, 0);
+                        align-items: stretch;
+                        -webkit-box-align: stretch;
+                } 
+                a[aria-expanded='false'] > .fa-caret-down  {
+                        transform: scale(1) rotate(-90deg);
+                }
+                a[aria-expanded="true"] > .fa-caret-right  {
+                        transform: rotate(90deg);
+                }
         </style>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
                 integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
@@ -56,6 +65,24 @@
                 integrity="sha512-J5lcGAULDaWwa2PUNt6rrIotMbdPeiRKz75CaVPHjMoO+Dco6FbS/V3u4wZefRYoxUSWsHde9P4aAErqmsEt2Q=="
                 crossorigin="anonymous"
                 referrerpolicy="no-referrer"></script>
+                <script>
+                        $(function() {
+                                $('.modal-content').resizable({
+                                    handles: 'w',
+                                    minWidth: 500, 
+                                    maxWidth: 1000,
+                                    stop: function(event, ui) {
+                                        $(this).css("height", '100%');
+                                    }
+                                });
+                            });
+                        function toggle(source) {
+                                checkboxes = document.getElementsByName('testSelect');
+                                for(var i=0, n=checkboxes.length;i<n;i++) {
+                                  checkboxes[i].checked = source.checked;
+                                }
+                        }
+                </script>
 </head>
 <body>
         <!-- Header -->
@@ -79,7 +106,7 @@
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                 <ul class="navbar-nav mr-auto">
                                         <a class="nav-link" href="{% url 'projects' %}">Проекты</a>
-                                        <a class="nav-link" href="#">Тесты</a>
+                                        <a class="nav-link" href="{% url 'tests' %}">Тесты</a>
                                         <a class="nav-link" href="#">Результаты</a>
                                 </ul>
                         </div>

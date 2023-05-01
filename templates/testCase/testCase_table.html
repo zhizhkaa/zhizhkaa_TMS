@@ -1,30 +1,17 @@
 {% block testCaseTable %}
     <div id="tests" class="w-75 pt-3 px-5">
         <div class="mb-2">
-            <script language="JavaScript">
-    function toggle(source) {
-        checkboxes = document.getElementsByName('testSelect');
-        for(var i=0, n=checkboxes.length;i<n;i++) {
-          checkboxes[i].checked = source.checked;
-        }
-    }
-            </script>
             <div class="d-flex flex-row">
-                <input type="checkbox" onClick="toggle(this)" class=""> 
+                <input type="checkbox" onClick="toggle(this)" class="">
                 <p class="mx-2 mb-0 h5">Тесты</p>
             </div>
         </div>
         {% if suite_test_list %}
-            {% with projectAcronym=project.acronym %}
-                {% for suite_name, test_list in suite_test_list.items %}
-                    {% if test_list %}
-                        <style>
-                a[aria-expanded='false'] > .fa-caret-down  {
-                    transform: scale(1) rotate(-90deg);
-                }
-                        </style>
-                        <div class="collapse show" id="collapse_{{ forloop.counter }}">
-                            {% for test in test_list %}
+            {% for suite_name, test_list in suite_test_list.items %}
+                {% if test_list %}
+                    <div class="collapse show" id="collapse_{{ forloop.counter }}">
+                        {% for test in test_list %}
+                            {% with projectAcronym=test.project.acronym %}
                                 <div class="d-flex flex-row">
                                     <input type="checkbox" name="testSelect">
                                     <a class="d-flex flex-row text-decoration-none"
@@ -39,11 +26,11 @@
                                 {% include 'testCase/testCase_modal.html' %}
                                 {% block testCaseModal %}
                                 {% endblock testCaseModal %}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            {% endwith %}
+                            {% endwith %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
         {% else %}
             <div>Нет тестов :(</div>
         {% endif %}

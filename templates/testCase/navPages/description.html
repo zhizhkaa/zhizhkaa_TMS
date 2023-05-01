@@ -1,0 +1,68 @@
+{% block description %}
+    <div class="tab-pane fade show active"
+         id="nav-description_{{ test.id }}"
+         role="tabpanel"
+         aria-labelledby="nav-description-tab">
+        <div id="description" class="pb-3">
+            <div>
+                <strong>Описание</strong>
+            </div>
+            {% if test.description %}
+                <div class="text-break">{{ test.description }}</div>
+            {% else %}
+                <div class="text-secondary">Отсутсвует</div>
+            {% endif %}
+        </div>
+        <div id="preconditions" class="pb-3">
+            <div>
+                <strong>Предусловия</strong>
+            </div>
+            {% if test.precondition %}
+                <div class="text-wrap">{{ test.precondition }}</div>
+            {% else %}
+                <div class="text-secondary">Отсутствуют</div>
+            {% endif %}
+        </div>
+        <div id="expectedResult" class="pb-3">
+            <div>
+                <strong>Ожидаемый результат</strong>
+            </div>
+            {% if test.expectedResult %}
+                <div class="text-wrap">{{ test.expectedResult }}</div>
+            {% else %}
+                <div class="text-secondary">Отсутствуют</div>
+            {% endif %}
+        </div>
+        <div id="testCaseSteps" class="pb-3">
+            <div>
+                <strong>Шаги</strong>
+            </div>
+            {% with steps=testCaseSteps|get_item:test.id %}
+                {% if steps %}
+                    {% for step in steps %}
+                        <!-- Список шагов -->
+                        <a class="d-flex align-items-center my-2 text-dark text-decoration-none"
+                           data-bs-toggle="collapse"
+                           href="#stepCollapse_{{ forloop.counter }}"
+                           aria-expanded="false"
+                           aria-controls="stepCollapse_{{ forloop.counter }}">
+                            <i class="fa-solid fa-caret-right mx-2"></i>
+                            <span class="badge bg-secondary me-2">{{ step.index_num }}</span>
+                            <div>{{ step.testStep }}</div>
+                        </a>
+                        <div class="collapse m-2" id="stepCollapse_{{ forloop.counter }}">
+                            <div class="card card-body">
+                                <div>
+                                    <strong>Ожидаемый результат</strong>
+                                </div>
+                                {{ step.testStep.expectedResult }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-secondary">Отсутсвуют</div>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+{% endblock description %}

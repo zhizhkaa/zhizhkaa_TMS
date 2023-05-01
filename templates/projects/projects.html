@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="mx-5 p-5">
+        <h2>Проекты</h2>
+        <!-- Кнопки под заголовком -->
+        <div class="d-inline-flex flex-row align-items-center p-1">
+            <!-- Кнопка "Новый проект"-->
+            <button type="button"
+                    class="btn btn-primary text-nowrap"
+                    data-bs-toggle="modal"
+                    data-bs-target="#newProject">Новый проект +</button>
+            <!-- Модал "Новый проект" -->
+            {% include 'projects/modals/new_project.html' %}
+            {% block new_project %}
+            {% endblock new_project %}
+            <!-- Поиск -->
+            <form class="input-group p-2"
+                  method="get"
+                  action="{% url 'search_results' %}">
+                <!-- Поле "Поиск" -->
+                <input name="search"
+                       type="text"
+                       class="form-control"
+                       placeholder="Поиск..."
+                       aria-label="Поиск..."
+                       required>
+                <!-- Кнопка "Поиск" -->
+                <button type="submit" class="btn btn-outline-primary" id="button-addon2">Поиск</button>
+            </form>
+        </div>
+        <!-- Список проектов пользователя -->
+        {% if project_list %}
+            {% for userProject in project_list %}
+                <div class="mx-5 mt-4">
+                    <a class="h4 "
+                       href="{% url 'project_view' project_pk=userProject.project.id %}">{{ userProject.project }}</a>
+                    <hr>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="mx-5 mt-4">
+                <h4>Список пуст :(</h4>
+                <a class="btn btn-outline-danger" href="{% url 'projects' %}">Отменить</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

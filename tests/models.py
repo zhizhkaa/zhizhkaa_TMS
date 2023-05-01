@@ -104,7 +104,7 @@ class TestPriorities(models.Model):
         verbose_name_plural = _("Приоритеты")
 
     def __str__(self):
-        return self.testPriority_name
+        return self.name
 
     def get_absolute_url(self):
         return reverse("test_priority_detail", kwargs={"pk": self.pk})
@@ -151,7 +151,7 @@ class TestCases(models.Model):
         "Проект"), on_delete=models.PROTECT)
 
     suite = models.ForeignKey(TestSuites, verbose_name=_(
-        "Группа"), on_delete=models.PROTECT)
+        "Группа"), null=True, on_delete=models.SET_NULL)
     type = models.ForeignKey(TestTypes, verbose_name=_(
         "Тип теста"), on_delete=models.PROTECT)
     priority = models.ForeignKey(TestPriorities, verbose_name=_(
