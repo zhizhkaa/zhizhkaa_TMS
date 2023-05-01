@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from .models import UserProjects, Projects, TestCases, TestSuites, TestCaseSteps
+from .models import TestCasePlans, TestPlans, UserProjects, Projects, TestCases, TestSuites, TestCaseSteps
 from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import login_required
@@ -50,7 +50,6 @@ def projects(request):
 
 
 def tests(request):
-
     suite_list = TestSuites.objects.all()
 
     suite_test_list = dict()
@@ -63,13 +62,60 @@ def tests(request):
         suite_test_list[suite_iter.name] = tests
 
         for test in tests:
-            testCaseSteps[test.id] = TestCaseSteps.objects.filter(testCase=test)
+            testCaseSteps[test.id] = TestCaseSteps.objects.filter(
+                testCase=test)
 
     return render(request, 'tests.html', {
         'suite_list': suite_list,
         'suite_test_list': suite_test_list,
         'testCaseSteps': testCaseSteps
     })
+
+
+def test_plans(request, project_pk):
+    project = Projects.objects.get(id=project_pk)
+    testPlans_list = TestPlans.objects.filter(project__id=project_pk)
+
+    testPlans_testCase_dict = dict()
+    testCaseSteps = dict()
+
+    # What the fuck
+    '''
+    Попробую объяснить
+    1. Получаем список айдишников тест-планов проекта
+    2. Для каждого айдишника получаем QuerySet объектов TestCasePlans
+    3. Для каждого значения QuerySet - TestCasePlans получаем TestCase
+    4. Заносим все TestCase для айдишника плана в список и добавляем его в словарь
+
+    Итог:
+    Словарь вида:
+    testPlan_id |   1   |    2   |   3   |
+                |-------|--------|-------|
+                |  TC1  |   TC6  |       |
+                |  TC2  |   TC7  |       |
+                |  TC3  |        |       |
+                |       |        |       |
+    '''
+    for testPlan_id in testPlans_list:
+        testPlan_list = TestCasePlans.objects.filter(testPlan=testPlan_id)
+        l = list()
+        for testPlan in testPlan_list:
+            l.append(testPlan.testCase)
+            testCaseSteps[testPlan.testCase.id] = TestCaseSteps.objects.filter(
+                testCase__project=project, testCase=testPlan.testCase)
+
+        testPlans_testCase_dict[testPlan_id] = l
+
+    for k, v in testPlans_testCase_dict.items():
+        print(k, v)
+
+    return render(request, 'test_plans.html', {
+        'project': project,
+        'suite_list': testPlans_list,
+        'suite_test_list': testPlans_testCase_dict,
+        'testCaseSteps': testCaseSteps
+    }
+    )
 
 
 @login_required

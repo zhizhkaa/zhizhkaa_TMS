@@ -230,6 +230,8 @@ class TestPlans(models.Model):
     id = models.AutoField(_("Код тест-плана"), primary_key=True)
     title = models.CharField(_("Название тест-плана"), max_length=50)
     description = models.TextField(_("Описание тест-плана"))
+    project = project = models.ForeignKey(Projects, verbose_name=_(
+        "Проект"), on_delete=models.PROTECT)
 
     class Meta:
         verbose_name = _("Тест-план")
@@ -274,7 +276,7 @@ class TestCasePlans(models.Model):
         verbose_name_plural = _("Тест-кейсы плана")
 
     def __str__(self):
-        return self.name
+        return self.testPlan.title
 
     def get_absolute_url(self):
         return reverse("test_case_plan_detail", kwargs={"pk": self.pk})
