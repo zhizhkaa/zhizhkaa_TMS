@@ -3,7 +3,9 @@
             {% for suite_name, test_list in suite_test_list.items %}           
                 {% if test_list %}
                     <div class="collapse show" id="collapse_{{ forloop.counter }}">
-                        <Strong>{{ suite_name.title }}</strong>
+
+                        <Strong id="title">{{ suite_name.title }}</strong>
+
                         {% for test in test_list %}
                             {% with projectAcronym=test.project.acronym %}
                                 <div class="d-flex flex-row">

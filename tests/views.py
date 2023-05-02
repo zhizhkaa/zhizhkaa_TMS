@@ -110,6 +110,7 @@ def test_plans(request, project_pk):
         print(k, v)
 
     return render(request, 'test_plans.html', {
+        #TODO: Переименовать все
         'project': project,
         'suite_list': testPlans_list,
         'suite_test_list': testPlans_testCase_dict,

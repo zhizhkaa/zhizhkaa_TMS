@@ -1,0 +1,49 @@
+{% block testListTable %}
+    <strong>
+        <div class="d-flex flex-row align-self-center text-decoration-none text-secondary text-nowrap">
+            <div class="mx-2" style="width: 5%;">Код</div>
+            <div class="mx-1" style="width: 30%;">Название</div>
+            <div class="mx-1" style="width: 15%;">Набор</div>
+            <div class="mx-1" style="width: 15%;">Тип</div>
+            <div class="mx-1" style="width: 10%;">Приоритет</div>
+            <div class="mx-1" style="width: 5%;">Автоматизирован</div>
+        </div>
+    </strong>
+    <hr class="m-1">
+    {% if suite_test_list %}
+        {% for suite_name, test_list in suite_test_list.items %}
+            {% if test_list %}
+                <div class="collapse show" id="collapse_{{ forloop.counter }}">
+                    {% for test in test_list %}
+                        {% with projectAcronym=test.project.acronym %}
+                            <a class="d-flex flex-row text-decoration-none text-nowrap text-secondary"
+                               href=""
+                               data-bs-toggle="modal"
+                               data-bs-target="#testCaseModal_{{ test.id }}">
+                                <div class="mx-2" style="width: 5%;">{{ projectAcronym }}-{{ test.id }}</div>
+                                <div class="mx-1 text-primary"
+                                     style="width: 30%">{{ test.title }}</div>
+                                <div class="mx-1" style="width: 15%;">{{ suite_name.title }}</div>
+                                <div class="mx-1" style="width: 15%;">{{ test.type }}</div>
+                                <div class="mx-1" style="width: 10%;">{{ test.priority }}</div>
+                                <div class="mx-1" style="width: 5%;">
+                                    {% if test.isAutomated %}
+                                        Да
+                                    {% else %}
+                                        Нет
+                                    {% endif %}
+                                </div>
+                            </a>
+                            <hr class="m-1">
+                            {% include 'testCase/testCase_modal.html' %}
+                            {% block testCaseModal %}
+                            {% endblock testCaseModal %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div>Нет тестов :(</div>
+    {% endif %}
+{% endblock %}

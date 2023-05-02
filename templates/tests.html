@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="mx-5 p-5">
-    {% include "testCase/testCase_table.html" %}
-    {% block testCaseTable %}
-    {% endblock testCaseTable %}
+    <h2>Тест-кейсы</h2>
+    {% include "testCase/testList_table.html" %}
+    {% block testListTable %}
+    <Strong id="title"></strong>
+    {% endblock testListTable %}
 </div>
 {% endblock content %}

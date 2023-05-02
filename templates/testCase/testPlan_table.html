@@ -1,0 +1,32 @@
+{% block testPlanTable %}
+    {% if suite_test_list %}
+        {% for suite_name, test_list in suite_test_list.items %}
+            {% if test_list %}
+                <div class="collapse show" id="collapse_{{ forloop.counter }}">
+                    <strong id="title">{{ suite_name.title }}</strong>
+                    {% for test in test_list %}
+                        {% with projectAcronym=test.project.acronym %}
+                            <a class="d-flex flex-row text-decoration-none"
+                                   href=""
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#testCaseModal_{{ test.id }}">
+                                   <div class="mx-2 text-secondary" style="width: 5%;">{{ projectAcronym }}-{{ test.id }}</div>
+                                   <div class="mx-1 w-50" style="width: 25%;">{{ test.title }}</div>
+                                   <div class="mx-1 text-secondary" style="width: 10%;">{{ test.type }}</div>
+                                   <div class="mx-1 text-secondary" style="width: 10%;">{{ test.priority }}</div>
+                                   <div class="mx-1 text-secondary" style="width: 5%;">{{ test.isAutomated }}</div>
+
+                            </a>
+                            <hr class="m-1">
+                            {% include 'testCase/testCase_modal.html' %}
+                            {% block testCaseModal %}
+                            {% endblock testCaseModal %}
+                        {% endwith %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div>Нет тестов :(</div>
+    {% endif %}
+{% endblock %}
