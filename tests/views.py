@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from .models import TestCasePlans, TestPlans, UserProjects, Projects, TestCases, TestSuites, TestCaseSteps
+from .models import TestCasePlans, TestCaseTags, TestPlans, UserProjects, Projects, TestCases, TestSuites, TestCaseSteps
 from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import login_required
@@ -77,7 +77,8 @@ def test_plans(request, project_pk):
     testPlans_list = TestPlans.objects.filter(project__id=project_pk)
 
     testPlans_testCase_dict = dict()
-    testCaseSteps = dict()
+    testCase_steps = dict()
+    testCase_tags = dict()
 
     # What the fuck
     '''
@@ -96,17 +97,22 @@ def test_plans(request, project_pk):
                 |  TC3  |        |       |
                 |       |        |       |
     '''
+    
+
     for testPlan_id in testPlans_list:
         testPlan_list = TestCasePlans.objects.filter(testPlan=testPlan_id)
         l = list()
+
         for testPlan in testPlan_list:
             l.append(testPlan.testCase)
-            testCaseSteps[testPlan.testCase.id] = TestCaseSteps.objects.filter(
+            testCase_steps[testPlan.testCase.id] = TestCaseSteps.objects.filter(
                 testCase__project=project, testCase=testPlan.testCase)
-
+            testCase_tags[testPlan.testCase.id] = TestCaseTags.objects.filter(
+                testCase=testPlan.testCase
+            ).values()
         testPlans_testCase_dict[testPlan_id] = l
 
-    for k, v in testPlans_testCase_dict.items():
+    for k, v in testCase_tags.items():
         print(k, v)
 
     return render(request, 'test_plans.html', {
@@ -114,7 +120,8 @@ def test_plans(request, project_pk):
         'project': project,
         'suite_list': testPlans_list,
         'suite_test_list': testPlans_testCase_dict,
-        'testCaseSteps': testCaseSteps
+        'testCaseSteps': testCase_steps,
+        'testCaseTags' : testCase_tags,
     }
     )
 
