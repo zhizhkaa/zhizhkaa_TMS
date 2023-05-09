@@ -48,8 +48,16 @@ def projects(request):
 
     return render(request, 'projects/projects.html', {'project_list': projects, 'user_list': users_list, })
 
+def tests_remove(request):
+    test_ids = request.POST.getlist('test_ids[]')
+    for id in test_ids:
+        test = TestCases.objects.get(id=id)
+        test.delete()
+
+    return HttpResponseRedirect(reverse('tests'))
 
 def tests(request):
+
     suite_list = TestSuites.objects.all()
 
     suite_test_list = dict()
@@ -61,17 +69,13 @@ def tests(request):
             suite=suite_iter).order_by('title')
 
         suite_test_list[suite_iter.name] = tests
-        
-
+    
         for test in tests:
             testCaseSteps[test.id] = TestCaseSteps.objects.filter(
                 testCase=test)
             testCase_tags[test.id] = TestCaseTags.objects.filter(
                 testCase=test.id
             )
-    
-    for k, v in testCase_tags.items():
-        print(k, v)
 
     return render(request, 'tests.html', {
         'suite_list': suite_list,

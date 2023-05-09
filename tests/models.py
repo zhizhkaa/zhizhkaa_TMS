@@ -209,7 +209,7 @@ class TestSteps(models.Model):
 class TestCaseSteps(models.Model):
 
     testCase = models.ForeignKey(TestCases, verbose_name=_(
-        "Тест-кейс"), on_delete=models.PROTECT)
+        "Тест-кейс"), on_delete=models.CASCADE)
     testStep = models.ForeignKey(
         TestSteps, verbose_name=_("Шаг"), on_delete=models.CASCADE)
     index_num = models.PositiveIntegerField(_("Номер шага"))
@@ -262,11 +262,11 @@ class TestCaseResults(models.Model):
 class TestCasePlans(models.Model):
 
     testPlan = models.ForeignKey(
-        TestPlans, verbose_name="Тест план", on_delete=models.PROTECT)
+        TestPlans, verbose_name="Тест план", on_delete=models.CASCADE)
     testCase = models.ForeignKey(
-        TestCases, verbose_name="Тест-кейс", on_delete=models.PROTECT)
+        TestCases, verbose_name="Тест-кейс", on_delete=models.CASCADE)
     assigned_to = models.ForeignKey(
-        settings.AUTH_USER_MODEL, verbose_name=_("Назанчено"), on_delete=models.PROTECT)
+        settings.AUTH_USER_MODEL, verbose_name=_("Назанчено"), on_delete=models.SET_NULL, null=True, blank=True)
     estimatedTime = models.PositiveIntegerField(_("Время"))
     result = models.ForeignKey(TestCaseResults, verbose_name=_(
         "Результат теста"), on_delete=models.PROTECT, null=True, blank=True)
@@ -300,7 +300,7 @@ class Tags(models.Model):
 class TestCaseTags(models.Model):
 
     testCase = models.ForeignKey(TestCases, verbose_name=_(
-        "Тест-кейс"), on_delete=models.PROTECT)
+        "Тест-кейс"), on_delete=models.CASCADE)
     tag = models.ForeignKey(Tags, verbose_name=_("Тег"),
                             on_delete=models.CASCADE)
 

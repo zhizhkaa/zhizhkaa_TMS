@@ -1,55 +1,120 @@
 {% block testListTable %}
-    <strong>
-        <div class="d-flex flex-row align-self-center text-decoration-none text-secondary text-nowrap">
-            <div class="mx-2" style="width: 5%;">Код</div>
-            <div class="mx-1" style="width: 30%;">Название</div>
-            <div class="mx-1" style="width: 15%;">Набор</div>
-            <div class="mx-1" style="width: 15%;">Тип</div>
-            <div class="mx-1" style="width: 10%;">Приоритет</div>
-            <div class="mx-1" style="width: 5%;">Авт</div>
-            <div class="mx-1" style="width: 5%;">Теги</div>
-        </div>
-    </strong>
-    <hr class="m-1">
+    
     {% if suite_test_list %}
-        {% for suite_name, test_list in suite_test_list.items %}
-            {% if test_list %}
-                {% for test in test_list %}
-                    {% with projectAcronym=test.project.acronym %}
-                        <a class="d-flex flex-row text-decoration-none text-nowrap text-secondary"
-                           href=""
-                           data-bs-toggle="modal"
-                           data-bs-target="#testCaseModal_{{ test.id }}">
-                            <div class="mx-2" style="width: 5%;">{{ projectAcronym }}-{{ test.id }}</div>
-                            <div class="mx-1 text-primary" style="width: 30%">{{ test.title }}</div>
-                            <div class="mx-1" style="width: 15%;">{{ suite_name.title }}</div>
-                            <div class="mx-1" style="width: 15%;">{{ test.type }}</div>
-                            <div class="mx-1" style="width: 10%;">{{ test.priority }}</div>
-                            <div class="mx-1" style="width: 5%;">
-                                {% if test.isAutomated %}
-                                    Да
-                                {% else %}
-                                    Нет
-                                {% endif %}
-                            </div>
-                            <div class="mx-1 text-success">
-                                {% for k, v in testCaseTags.items %}
-                                    {% if k == test.id %}
-                                        <div>
-                                            {% for x in v %}#{{ x.tag }} {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        </a>
-                        <hr class="m-1">
-                        {% include 'testCase/testCase_modal.html' %}
-                        {% block testCaseModal %}
-                        {% endblock testCaseModal %}
-                    {% endwith %}
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
+        <div id="toolbar">
+            <button id="remove" class="btn btn-danger" disabled>
+                <i class="fa fa-trash"></i> Удалить
+            </button>
+        </div>
+        <hr class="m-1">
+        {% csrf_token %}
+        <form>
+            <table id="table"
+                   data-toggle="table"
+                   data-toolbar="#toolbar"
+                   data-search="true"
+                   data-show-fullscreen="true"
+                   data-show-export="true"
+                   data-show-columns="true"
+                   data-show-columns-toggle-all="true"
+                   data-minimum-count-columns="2"
+                   data-id-field="id">
+                <thead>
+                    <tr>
+                        <th data-field="state" data-checkbox="true"></th>
+                        <th>Проект</th>
+                        <th data-field="id">Код</th>
+                        <th>Название</th>
+                        <th>Набор</th>
+                        <th>Тип</th>
+                        <th>Приоритет</th>
+                        <th>Автоматизирован</th>
+                        <th>Теги</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for suite_name, test_list in suite_test_list.items %}
+                        {% if test_list %}
+                            {% for test in test_list %}
+                                <tr>
+                                    {% with projectAcronym=test.project.acronym %}
+                                        <td></td>
+                                        <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}"">{{ projectAcronym }}
+                                        </td>
+                                        <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}"">{{ test.id }}
+                                        </td>
+                                        <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ test.title }}</td>
+                                        <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ suite_name.title }}</td>
+                                        <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ test.type }}</td>
+                                        <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ test.priority }}</td>
+                                        <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">
+                                            {% if test.isAutomated %}
+                                                Да
+                                            {% else %}
+                                                Нет
+                                            {% endif %}
+                                        </td>
+                                        <td class="mx-1 text-success">
+                                            {% for k, v in testCaseTags.items %}
+                                                {% if k == test.id %}
+                                                    <div>
+                                                        {% for x in v %}#{{ x.tag }}{% endfor %}
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                    {% endwith %}
+                                </tr>
+                                {% include 'testCase/testCase_modal.html' %}
+                                {% block testCaseModal %}
+                                {% endblock testCaseModal %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+        <script>
+            var $table = $('#table')
+            var $remove = $('#remove')
+            var selections = []
+
+            function getIdSelections() {
+                return $.map($table.bootstrapTable('getSelections'), function (row) {
+                return row.id
+                })
+            }
+
+
+            function initTable() {
+                $table.on('check.bs.table uncheck.bs.table ' +
+                'check-all.bs.table uncheck-all.bs.table',
+                function () {
+                $remove.prop('disabled', !$table.bootstrapTable('getSelections').length)})
+                $remove.click(function () {
+
+                    var CSRFtoken = $('input[name=csrfmiddlewaretoken]').val();
+                    var ids = getIdSelections()
+
+                    $.post('remove/', { 
+                        test_ids: ids,
+                        csrfmiddlewaretoken: CSRFtoken
+                    });
+                    
+                    $table.bootstrapTable('remove', {
+                        field: 'id',
+                        values: ids
+                    })
+                    $remove.prop('disabled', true)
+
+                   
+                })
+            }
+
+            $(function() {
+                initTable()
+            })
+        </script>
     {% else %}
         <div>Нет тестов :(</div>
     {% endif %}

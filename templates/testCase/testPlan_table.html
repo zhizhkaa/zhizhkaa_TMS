@@ -31,7 +31,7 @@
                     {% for x in test_list %}
                         {% with test=x.testCase %}
                             {% with projectAcronym=test.project.acronym %}
-                                <div class="d-flex flex-row">
+                                <div class="d-flex flex-row align-items-center">
                                     <a class="d-flex flex-row text-decoration-none text-secondary"
                                        href=""
                                        data-bs-toggle="modal"
@@ -53,10 +53,17 @@
                                             </strong>
                                         </div>
                                     </a>
-                                    <a href="{% url 'testResult_success' project_pk=test.project.id testPlan_pk=x.testPlan.id test_pk=test.id %}"
-                                       class="mx-1 fa-solid fa-thumbs-up text-success"></a>
-                                    <a href="{% url 'testResult_fail' project_pk=test.project.id testPlan_pk=x.testPlan.id test_pk=test.id %}" class="mx-1 fa-solid fa-thumbs-down text-danger"></a>
-                                    <a href="warning" class="mx-1 fa-solid fa-question text-warning"></a>
+                                    {% if user == x.assigned_to %}
+                                        <a href="{% url 'testResult_success' project_pk=test.project.id testPlan_pk=x.testPlan.id test_pk=test.id %}"
+                                           class="mx-1 fa-solid fa-thumbs-up text-success"></a>
+                                        <a href="{% url 'testResult_fail' project_pk=test.project.id testPlan_pk=x.testPlan.id test_pk=test.id %}"
+                                           class="mx-1 fa-solid fa-thumbs-down text-danger"></a>
+                                        <a href="warning" class="mx-1 fa-solid fa-question text-warning"></a>
+                                    {% else %}
+                                        <i class="mx-1 text-secondary fa-solid fa-thumbs-up"></i>
+                                        <i class="mx-1 text-secondary fa-solid fa-thumbs-down"></i>
+                                        <i class="mx-1 text-secondary fa-solid fa-question"></i>
+                                    {% endif %}
                                 </div>
                                 <hr class="m-1">
                                 {% include 'testCase/testCase_modal.html' %}

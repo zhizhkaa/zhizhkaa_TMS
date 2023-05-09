@@ -14,4 +14,5 @@ urlpatterns = [
     path('project/<int:project_pk>/test_plans/<int:testPlan_pk>/<int:test_pk>/fail', views.testResult_fail, name='testResult_fail'),
     path('project/<int:project_pk>/delete/suite/<suite_name>', views.delete_suite, name='delete_suite'),
     path('tests/', views.tests, name='tests'),
+    path('tests/remove/', views.tests_remove, name='tests_remove')
 ]
