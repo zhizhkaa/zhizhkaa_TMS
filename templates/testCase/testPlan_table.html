@@ -1,26 +1,68 @@
 {% block testPlanTable %}
+    <strong>
+        <div class="d-flex flex-row">
+            <div class="d-flex flex-row align-self-center text-decoration-none text-secondary text-nowrap"
+                 style="width: 100%">
+                <div class="mx-2" style="width: 5%;">Код</div>
+                <div class="mx-1" style="width: 35%;">Название</div>
+                <div class="mx-1" style="width: 10%;">Приоритет</div>
+                <div class="mx-1" style="width: 10%;">Назначено</div>
+                <div class="mx-1" style="width: 10%;">Время</div>
+                <div class="mx-1" style="width: 10%;">Результат</div>
+            </div>
+            <div>Кнопки</div>
+        </div>
+        <hr>
+    </strong>
     {% if suite_test_list %}
         {% for suite_name, test_list in suite_test_list.items %}
             {% if test_list %}
+                <a class="d-flex align-items-center text-dark text-decoration-none"
+                   data-bs-toggle="collapse"
+                   href="#collapse_{{ forloop.counter }}"
+                   name="suiteSelect">
+                    {% if test_list %}
+                        <i class="fa-solid fa-caret-down"></i>
+                    {% else %}
+                        <i class="fa-solid fa-caret-down" style="color: #f8f9fa;"></i>
+                    {% endif %}
+                    <strong id="title">{{ suite_name.title }}</strong></a>
                 <div class="collapse show" id="collapse_{{ forloop.counter }}">
-                    <strong id="title">{{ suite_name.title }}</strong>
-                    {% for test in test_list %}
-                        {% with projectAcronym=test.project.acronym %}
-                            <a class="d-flex flex-row text-decoration-none"
-                                   href=""
-                                   data-bs-toggle="modal"
-                                   data-bs-target="#testCaseModal_{{ test.id }}">
-                                   <div class="mx-2 text-secondary" style="width: 5%;">{{ projectAcronym }}-{{ test.id }}</div>
-                                   <div class="mx-1 w-50" style="width: 25%;">{{ test.title }}</div>
-                                   <div class="mx-1 text-secondary" style="width: 10%;">{{ test.type }}</div>
-                                   <div class="mx-1 text-secondary" style="width: 10%;">{{ test.priority }}</div>
-                                   <div class="mx-1 text-secondary" style="width: 5%;">{{ test.isAutomated }}</div>
-
-                            </a>
-                            <hr class="m-1">
-                            {% include 'testCase/testCase_modal.html' %}
-                            {% block testCaseModal %}
-                            {% endblock testCaseModal %}
+                    {% for x in test_list %}
+                        {% with test=x.testCase %}
+                            {% with projectAcronym=test.project.acronym %}
+                                <div class="d-flex flex-row">
+                                    <a class="d-flex flex-row text-decoration-none text-secondary"
+                                       href=""
+                                       data-bs-toggle="modal"
+                                       data-bs-target="#testCaseModal_{{ test.id }}"
+                                       style="width: 100%">
+                                        <div class="mx-2" style="width: 5%;">{{ projectAcronym }}-{{ test.id }}</div>
+                                        <div class="mx-1 text-primary" style="width: 35%;">{{ test.title }}</div>
+                                        <div class="mx-1" style="width: 10%;">{{ test.priority }}</div>
+                                        <div class="mx-1" style="width: 10%;">@{{ x.assigned_to }}</div>
+                                        <div class="mx-1" style="width: 10%;">{{ x.estimatedTime }} мин</div>
+                                        <div class="mx-1 {% if x.result.name %}{% if x.result.name == "Успех" %} text-success {% elif x.result.name == "Ошибка" %} text-danger {% else %} text-warning {% endif %}{% endif %}"
+                                             style="width: 10%">
+                                            <strong>
+                                                {% if x.result %}
+                                                    {{ x.result }}
+                                                {% else %}
+                                                    -
+                                                {% endif %}
+                                            </strong>
+                                        </div>
+                                    </a>
+                                    <a href="{% url 'testResult_success' project_pk=test.project.id testPlan_pk=x.testPlan.id test_pk=test.id %}"
+                                       class="mx-1 fa-solid fa-thumbs-up text-success"></a>
+                                    <a href="{% url 'testResult_fail' project_pk=test.project.id testPlan_pk=x.testPlan.id test_pk=test.id %}" class="mx-1 fa-solid fa-thumbs-down text-danger"></a>
+                                    <a href="warning" class="mx-1 fa-solid fa-question text-warning"></a>
+                                </div>
+                                <hr class="m-1">
+                                {% include 'testCase/testCase_modal.html' %}
+                                {% block testCaseModal %}
+                                {% endblock testCaseModal %}
+                            {% endwith %}
                         {% endwith %}
                     {% endfor %}
                 </div>

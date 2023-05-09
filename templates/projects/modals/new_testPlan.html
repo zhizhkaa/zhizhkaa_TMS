@@ -1,0 +1,135 @@
+{% block new_testPlan %}
+    <!-- Модал -->
+    <!-- FORM -->
+    <form method="post"
+          class="modal fade modal-lg needs-validation"
+          id="newTestPlan"
+          tabindex="-1"
+          aria-labelledby="#newTestPlanLabel"
+          aria-hidden="true">
+        {% csrf_token %}
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newTestPlanLabel">Новый тест-план</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <!-- Модал -->
+                <div class="modal-body">
+                    <label for="validationCustom01">Название тест-плана</label>
+                    <div class="input-group input-group-sm mb-3 has-validation">
+                        <!-- Название нового проекта -->
+                        <input type="text"
+                               name="testPlan_name"
+                               class="form-control"
+                               aria-label="Small"
+                               aria-describedby="inputGroup-sizing-sm"
+                               required>
+                    </div>
+                    <label for="validationCustom01">Описание тест-плана</label>
+                    <div class="input-group input-group-sm mb-3 has-validation">
+                        <!-- Описание нового тест-плана -->
+                        <input type="text"
+                               name="testPlan_description"
+                               class="form-control"
+                               aria-label="Small"
+                               aria-describedby="inputGroup-sizing-sm"
+                               required>
+                    </div>
+                    <!-- Пользователи нового проекта -->
+                    <div>Тест-кейсы</div>
+                    <style>
+                        .results tr[visible='false'],
+                        .no-result{
+                        display:none;
+                        }
+
+                        .results tr[visible='true']{
+                        display:table-row;
+                        }
+                    </style>
+                    <script>
+                        $(document).ready(function() {
+                            $(".search").keyup(function () {
+                              var searchTerm = $(".search").val();
+                              var listItem = $('.results tbody').children('tr');
+                              var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+                              
+                            $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
+                                  return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+                              }
+                            });
+                              
+                            $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
+                              $(this).attr('visible','false');
+                            });
+                          
+                            $(".results tbody tr:containsi('" + searchSplit + "')").each(function(e){
+                              $(this).attr('visible','true');
+                            });
+                          
+                            var jobCount = $('.results tbody tr[visible="true"]').length;
+                              $('.counter').text(jobCount + ' найдено');
+                          
+                            if(jobCount == '0') {$('.no-result').show();}
+                              else {$('.no-result').hide();}
+                                    });
+                          });
+                    </script>
+                    <div class="form-group pull-right mb-2">
+                        <input type="text"
+                               class="search form-control"
+                               placeholder="Название тест-кейса">
+                    </div>
+                    <span class="counter pull-right"></span>
+                    <table class="table table-hover table-bordered results">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox">
+                                </th>
+                                <th>Название</th>
+                                <th>Время выполнения (мин)</th>
+                                <th>Назначено</th>
+                            </tr>
+                            <tr class="warning no-result">
+                                <td colspan="4">
+                                    <i class="fa fa-warning"></i> Ничего не найдено
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for test in projectTestCases %}
+                                <tr>
+                                    <th scope="row">
+                                        <input type="checkbox" name="selected_row" value="{{ forloop.counter }}">
+                                    </th>
+                                    <td>
+                                        {{ test }}
+                                        <input type="hidden" name="test_id" value="{{ test.id }}">
+                                    </td>
+                                    <td>
+                                        <input name="testCase_time" id="testCaseTime_{{ test.id }}">
+                                    </td>
+                                    <td name="testCase_{{ test.id }}">
+                                        <select class="selectpicker" data-live-search="true" name="testCase_assigned" title="Пользователь...">
+                                            {% for x in project_users %}<option value="{{ x.user }}"> {{ x.user }} </option>{% endfor %}
+                                            </select>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <!-- Кнопка "Закрыть" -->
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            <!-- Кнопка "Сохранить" -->
+                            <button type="submit" href="new_testPlan" class="btn btn-primary">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        {% endblock new_testPlan %}

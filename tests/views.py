@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from .models import TestCasePlans, TestCaseTags, TestPlans, UserProjects, Projects, TestCases, TestSuites, TestCaseSteps
+from .models import TestCasePlans, TestCaseResults, TestCaseTags, TestPlans, UserProjects, Projects, TestCases, TestSuites, TestCaseSteps
 from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import login_required
@@ -54,27 +54,49 @@ def tests(request):
 
     suite_test_list = dict()
     testCaseSteps = dict()
+    testCase_tags = dict()
 
     for suite_iter in suite_list:
         tests = TestCases.objects.filter(
             suite=suite_iter).order_by('title')
 
         suite_test_list[suite_iter.name] = tests
+        
 
         for test in tests:
             testCaseSteps[test.id] = TestCaseSteps.objects.filter(
                 testCase=test)
+            testCase_tags[test.id] = TestCaseTags.objects.filter(
+                testCase=test.id
+            )
+    
+    for k, v in testCase_tags.items():
+        print(k, v)
 
     return render(request, 'tests.html', {
         'suite_list': suite_list,
         'suite_test_list': suite_test_list,
-        'testCaseSteps': testCaseSteps
+        'testCaseSteps': testCaseSteps,
+        'testCaseTags' : testCase_tags,
     })
 
+def create_testPlan(request):
+    print('name', request.getlist('testPlan_name'))
+    print('description', request.getlist('testPlan_description'))
+    print('selected_row', request.getlist('selected_row'))
+    print('testCase_time', request.getlist('testCase_time'))
+    print('testCase_assigned', request.getlist('testCase_assigned'))
+    return
 
 def test_plans(request, project_pk):
+    if request.method == "POST":
+        create_testPlan(request.POST)
+        return redirect(request.META['HTTP_REFERER'])
+
     project = Projects.objects.get(id=project_pk)
     testPlans_list = TestPlans.objects.filter(project__id=project_pk)
+    project_testCases = TestCases.objects.filter(project__id=project_pk)
+    project_users = UserProjects.objects.filter(project=project_pk)
 
     testPlans_testCase_dict = dict()
     testCase_steps = dict()
@@ -97,23 +119,19 @@ def test_plans(request, project_pk):
                 |  TC3  |        |       |
                 |       |        |       |
     '''
-    
 
     for testPlan_id in testPlans_list:
         testPlan_list = TestCasePlans.objects.filter(testPlan=testPlan_id)
         l = list()
 
         for testPlan in testPlan_list:
-            l.append(testPlan.testCase)
+            l.append(testPlan)
             testCase_steps[testPlan.testCase.id] = TestCaseSteps.objects.filter(
                 testCase__project=project, testCase=testPlan.testCase)
             testCase_tags[testPlan.testCase.id] = TestCaseTags.objects.filter(
                 testCase=testPlan.testCase
-            ).values()
+            )
         testPlans_testCase_dict[testPlan_id] = l
-
-    for k, v in testCase_tags.items():
-        print(k, v)
 
     return render(request, 'test_plans.html', {
         #TODO: Переименовать все
@@ -122,9 +140,24 @@ def test_plans(request, project_pk):
         'suite_test_list': testPlans_testCase_dict,
         'testCaseSteps': testCase_steps,
         'testCaseTags' : testCase_tags,
+        'projectTestCases' : project_testCases,
+        'project_users' : project_users,
     }
     )
 
+def testResult_success(request, project_pk, testPlan_pk, test_pk):
+    testPlan = TestCasePlans.objects.get(testPlan__id=testPlan_pk, testPlan__project=project_pk, testCase__id=test_pk)
+    testPlan.result = TestCaseResults.objects.get(name="Успех")
+    testPlan.save()
+
+    return redirect(request.META['HTTP_REFERER'])
+
+def testResult_fail(request, project_pk, testPlan_pk, test_pk):
+    testPlan = TestCasePlans.objects.get(testPlan__id=testPlan_pk, testPlan__project=project_pk, testCase__id=test_pk)
+    testPlan.result = TestCaseResults.objects.get(name="Ошибка")
+    testPlan.save()
+
+    return redirect(request.META['HTTP_REFERER'])
 
 @login_required
 def projects_search_results(request):

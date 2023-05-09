@@ -269,7 +269,7 @@ class TestCasePlans(models.Model):
         settings.AUTH_USER_MODEL, verbose_name=_("Назанчено"), on_delete=models.PROTECT)
     estimatedTime = models.PositiveIntegerField(_("Время"))
     result = models.ForeignKey(TestCaseResults, verbose_name=_(
-        "Результат теста"), on_delete=models.PROTECT)
+        "Результат теста"), on_delete=models.PROTECT, null=True, blank=True)
 
     class Meta:
         verbose_name = _("Тест-кейс плана")

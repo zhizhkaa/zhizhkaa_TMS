@@ -45,5 +45,21 @@
                 {% endif %}
             </div>
         </div>
+        <div id="testTags" class="pb-3">
+            <div>
+                <strong>Теги</strong>
+            </div>
+            <div class="text-break">
+                {% for test_id, tagList in testCaseTags.items %}
+                    {% if test_id == test.id %}
+                            {% if tagList %}
+                                <div>{% for tag in tagList %}#{{ tag.tag }} {% endfor %}</div>
+                            {% else %}
+                                <div class="text-secondary">Отсутствуют</div>
+                            {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock properties %}
