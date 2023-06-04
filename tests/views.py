@@ -14,6 +14,8 @@ from django.db.models import Q
 def get_item(dictionary, key):
     return dictionary[key]
 
+# Метод для создания проетка
+
 
 def create_project(request):
 
@@ -35,6 +37,8 @@ def create_project(request):
                 except Exception:
                     raise
 
+# Список проектов
+
 
 @login_required
 def projects(request):
@@ -48,6 +52,9 @@ def projects(request):
 
     return render(request, 'projects/projects.html', {'project_list': projects, 'user_list': users_list, })
 
+# Удаление выбранных тестов
+
+
 def tests_remove(request):
     test_ids = request.POST.getlist('test_ids[]')
     for id in test_ids:
@@ -55,6 +62,9 @@ def tests_remove(request):
         test.delete()
 
     return HttpResponseRedirect(reverse('tests'))
+
+# Список тестов
+
 
 def tests(request):
 
@@ -69,28 +79,23 @@ def tests(request):
             suite=suite_iter).order_by('title')
 
         suite_test_list[suite_iter.name] = tests
-    
+
         for test in tests:
             testCaseSteps[test.id] = TestCaseSteps.objects.filter(
                 testCase=test)
             testCase_tags[test.id] = TestCaseTags.objects.filter(
                 testCase=test.id
             )
-
+    print(testCaseSteps)
     return render(request, 'tests.html', {
         'suite_list': suite_list,
         'suite_test_list': suite_test_list,
         'testCaseSteps': testCaseSteps,
-        'testCaseTags' : testCase_tags,
+        'testCaseTags': testCase_tags,
     })
 
-def create_testPlan(request):
-    print('name', request.getlist('testPlan_name'))
-    print('description', request.getlist('testPlan_description'))
-    print('selected_row', request.getlist('selected_row'))
-    print('testCase_time', request.getlist('testCase_time'))
-    print('testCase_assigned', request.getlist('testCase_assigned'))
-    return
+# Список тест-планов
+
 
 def test_plans(request, project_pk):
     if request.method == "POST":
@@ -136,32 +141,55 @@ def test_plans(request, project_pk):
                 testCase=testPlan.testCase
             )
         testPlans_testCase_dict[testPlan_id] = l
-
+        
+    print(testCase_steps)
     return render(request, 'test_plans.html', {
-        #TODO: Переименовать все
+        # TODO: Переименовать все
         'project': project,
         'suite_list': testPlans_list,
         'suite_test_list': testPlans_testCase_dict,
         'testCaseSteps': testCase_steps,
-        'testCaseTags' : testCase_tags,
-        'projectTestCases' : project_testCases,
-        'project_users' : project_users,
+        'testCaseTags': testCase_tags,
+        'projectTestCases': project_testCases,
+        'project_users': project_users,
     }
     )
 
+# TODO: Создание тест-плана
+
+
+def create_testPlan(request):
+    print('name', request.getlist('testPlan_name'))
+    print('description', request.getlist('testPlan_description'))
+    print('selected_row', request.getlist('selected_row'))
+    print('testCase_time', request.getlist('testCase_time'))
+    print('testCase_assigned', request.getlist('testCase_assigned'))
+    return
+
+# Смена результата на "Успех"
+
+
 def testResult_success(request, project_pk, testPlan_pk, test_pk):
-    testPlan = TestCasePlans.objects.get(testPlan__id=testPlan_pk, testPlan__project=project_pk, testCase__id=test_pk)
+    testPlan = TestCasePlans.objects.get(
+        testPlan__id=testPlan_pk, testPlan__project=project_pk, testCase__id=test_pk)
     testPlan.result = TestCaseResults.objects.get(name="Успех")
     testPlan.save()
 
     return redirect(request.META['HTTP_REFERER'])
 
+# Смена результата на "Ошибка"
+
+
 def testResult_fail(request, project_pk, testPlan_pk, test_pk):
-    testPlan = TestCasePlans.objects.get(testPlan__id=testPlan_pk, testPlan__project=project_pk, testCase__id=test_pk)
+    testPlan = TestCasePlans.objects.get(
+        testPlan__id=testPlan_pk, testPlan__project=project_pk, testCase__id=test_pk)
     testPlan.result = TestCaseResults.objects.get(name="Ошибка")
     testPlan.save()
 
     return redirect(request.META['HTTP_REFERER'])
+
+# Поиск проектов
+
 
 @login_required
 def projects_search_results(request):
@@ -179,11 +207,7 @@ def projects_search_results(request):
 
     return render(request, 'projects/projects_search_results.html', {'project_list': projects_searh_list, 'user_list': users_list})
 
-
-def create_suite(request, project_req):
-    suite = TestSuites(name=request.get(
-        'suite_name'), project=project_req)
-    suite.save()
+# Просмотр наборов и тестов проекта
 
 
 def project_view(request, project_pk):
@@ -215,6 +239,16 @@ def project_view(request, project_pk):
         'testCaseSteps': testCaseSteps
     }
     )
+
+# Создание набора
+
+
+def create_suite(request, project_req):
+    suite = TestSuites(name=request.get(
+        'suite_name'), project=project_req)
+    suite.save()
+
+# Удалить набор
 
 
 def delete_suite(request, project_pk, suite_name):

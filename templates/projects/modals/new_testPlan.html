@@ -115,21 +115,24 @@
                                         <input name="testCase_time" id="testCaseTime_{{ test.id }}">
                                     </td>
                                     <td name="testCase_{{ test.id }}">
-                                        <select class="selectpicker" data-live-search="true" name="testCase_assigned" title="Пользователь...">
-                                            {% for x in project_users %}<option value="{{ x.user }}"> {{ x.user }} </option>{% endfor %}
-                                            </select>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <!-- Кнопка "Закрыть" -->
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                            <!-- Кнопка "Сохранить" -->
-                            <button type="submit" href="new_testPlan" class="btn btn-primary">Сохранить</button>
-                        </div>
+                                        <select class="selectpicker"
+                                                data-live-search="true"
+                                                name="testCase_assigned"
+                                                title="Пользователь...">
+                                            {% for x in project_users %}<option value="{{ x.user }}">{{ x.user }}</option>{% endfor %}
+                                        </select>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- Кнопка "Закрыть" -->
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <!-- Кнопка "Сохранить" -->
+                        <button type="submit" href="new_testPlan" class="btn btn-primary">Сохранить</button>
                     </div>
                 </div>
-            </form>
-        {% endblock new_testPlan %}
+            </div>
+        </form>
+    {% endblock new_testPlan %}

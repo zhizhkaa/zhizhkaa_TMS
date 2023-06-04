@@ -1,10 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="mx-5 p-5">
-    <h2>Тест-кейсы</h2>
-    {% include "testCase/testList_table.html" %}
-    {% block testListTable %}
-    <Strong id="title"></strong>
-    {% endblock testListTable %}
-</div>
+    <div class="mx-5 p-5">
+        <div class="d-flex flex-row align-items-center">
+            <h2  class="me-2">Тест-кейсы</h2>
+            <div><button id="create"
+                    class="btn btn-primary btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createTestCase">Создать</button> </div>
+        </div>
+        {% include "testCase/testList_table.html" %}
+        {% block testListTable %}
+            <strong id="title"></strong>
+        {% endblock testListTable %}
+    </div>
 {% endblock content %}
