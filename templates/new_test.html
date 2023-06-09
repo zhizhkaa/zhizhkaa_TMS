@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="mx-5 p-5">
+        <div class="d-flex flex-row align-items-center">
+            <h2 class="me-2">Новый тест-кейс</h2>
+        </div>
+        <form>
+            <hr>
+            <h5>Описание</h5>
+            <div class="form-group my-2">
+                <label for="title">Название</label>
+                <input type="text"
+                       class="form-control"
+                       id="title"
+                       placeholder="Введите название">
+            </div>
+            <div class="form-group my-2">
+                <label for="preconditions">Предусловия</label>
+                <input type="text"
+                       class="form-control"
+                       id="preconditions"
+                       placeholder="Отсутствует"
+                       aria-describedby="preconditionsHelp">
+                <div id="preconditionsHelp" class="form-text">Условия, которые нужно соблюсти перед началом тест-кейса.</div>
+            </div>
+            <div class="form-group my-2">
+                <label for="result">Ожидаемый результат</label>
+                <input type="text"
+                       class="form-control"
+                       id="result"
+                       placeholder="Отсутствует"
+                       aria-describedby="resultHelp">
+                <div id="resultHelp" class="form-text">Ожидаемый результат выполнения теста.</div>
+            </div>
+            <div class="form-group my-2">
+                <label for="description">Описание</label>
+                <input type="text"
+                       class="form-control"
+                       id="description"
+                       placeholder="Отсутствует"
+                       aria-describedby="descriptionHelp">
+                <div id="descriptionHelp" class="form-text">Пример: Проверка корректности загрузки страницы http://example.net</div>
+            </div>
+            <div class>
+                <hr>
+                <h5>Параметры</h5>
+                <div class="my-2 d-flex align-items-center">
+                    <div>
+                        <div>Проект</div>
+                        <select id="project" class="selectpicker" aria-label="Проект">
+                            <option value="1">One</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div>Набор</div>
+                        <select id="project" class="selectpicker" aria-label="Набор">
+                            <option value="1">One</option>
+                        </select>
+                    </div>
+                    <div class="form-check my-2">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Автоматизирован</label>
+                    </div>
+                </div>
+                <div class="my-2 d-flex flex-row align-items-center">
+                    <div>
+                        <div>Тип теста</div>
+                        <select id="project" class="selectpicker" aria-label="Проект">
+                            <option>One</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div>Приоритет</div>
+                        <select id="project" class="selectpicker" aria-label="Набор">
+                            <option value="1">One</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div>Статус</div>
+                        <select id="project" class="selectpicker" aria-label="Набор">
+                            <option value="1">One</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="steps_list" class="my-2">
+                <fieldset id="buildyourform">
+                    <hr>
+                    <div class="d-flex">
+                        <h5 class="me-2">Шаги</h5>
+                        <input type="button" value="Шаг +" class="add btn btn-sm btn-primary" id="add" />
+                    </div>
+                </fieldset>
+                <!--<div class="form-group my-2 d-flex align-items-center">
+                    <span class="badge bg-secondary me-2">1</span>
+                    <input type="text" class="form-control me-2" id="step_1" placeholder="Описание шага">
+                    <input type="text" class="form-control" id="step_1" placeholder="Ожидаемый результат">
+</div>-->
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <button type="submit_new" class="btn btn-outline-secondary">Сохранить и создать ещё</button>
+            <button type="cancel" class="btn btn-outline-danger">Закрыть</button>
+        </form>
+        <script>
+            $(document).ready(function() {
+                $("#add").click(function() {
+                    var lastField = $("#steps_list div:last");
+                    var intId = (lastField && lastField.length && lastField.data("idx") + 1) || 1;
+                    var fieldWrapper = $("<div class=\"form-group my-2 d-flex align-items-center\">");
+                    fieldWrapper.data("idx", intId);
+                    var fNum = $("<span class=\"badge bg-secondary me-2\" value=\"" + intId + "\">" + intId + "</span>");
+                    var fName = $("<input type=\"text\" class=\"form-control me-2\" id=\"step_\" placeholder=\"Описание шага\">");
+                    var fType = $("<input type=\"text\" class=\"form-control me-2\" id=\"step_\" placeholder=\"Ожидаемый результат\">");
+                    var removeButton = $("<input type=\"button\" class=\"btn btn-primary\" value=\"-\" />");
+                    removeButton.click(function() {
+                        $(this).parent().remove();
+                    });
+                    fieldWrapper.append(fNum);
+                    fieldWrapper.append(fName);
+                    fieldWrapper.append(fType);
+                    fieldWrapper.append(removeButton);
+                    $("#buildyourform").append(fieldWrapper);
+                });
+            });
+        </script>
+    {% endblock content %}

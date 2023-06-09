@@ -255,3 +255,15 @@ def delete_suite(request, project_pk, suite_name):
     suite = TestSuites.objects.filter(project__id=project_pk, name=suite_name)
     suite.delete()
     return HttpResponseRedirect(reverse('project_view', args=[project_pk]))
+
+def login_view(request):
+    print("Логин")
+    return render(request, 'auth/login.html', { })
+
+def restore_view(request):
+    print("Восстановить пароль")
+    return render(request, 'auth/password_restore.html', { })
+
+def new_test(request):
+    print("Новый тест")
+    return render(request, 'new_test.html', {})

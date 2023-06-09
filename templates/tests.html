@@ -2,11 +2,12 @@
 {% block content %}
     <div class="mx-5 p-5">
         <div class="d-flex flex-row align-items-center">
-            <h2  class="me-2">Тест-кейсы</h2>
-            <div><button id="create"
-                    class="btn btn-primary btn-sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#createTestCase">Создать</button> </div>
+            <h2 class="me-2">Тест-кейсы</h2>
+            <div>
+                <a id="create"
+                   class="btn btn-primary btn-sm"
+                   href="{% url 'new_test' %}">Создать</a>
+            </div>
         </div>
         {% include "testCase/testList_table.html" %}
         {% block testListTable %}

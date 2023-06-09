@@ -28,8 +28,9 @@
                                     data-footer-formatter="nameFormatter">Название</th>
                                 <th data-sortable="true">Приоритет</th>
                                 <th data-sortable="true">Назначено</th>
-                                <th data-sortable="true" data-field="time"
-                                data-footer-formatter="timeFormatter">Время, мин</th>
+                                <th data-sortable="true"
+                                    data-field="time"
+                                    data-footer-formatter="timeFormatter">Время, мин</th>
                                 <th data-sortable="true">Результат</th>
                                 <th>Действия</th>
                             </tr>
@@ -60,7 +61,38 @@
                                                        class="mx-1 fa-solid fa-thumbs-up text-success"></a>
                                                     <a href="{% url 'testResult_fail' project_pk=test.project.id testPlan_pk=x.testPlan.id test_pk=test.id %}"
                                                        class="mx-1 fa-solid fa-thumbs-down text-danger"></a>
-                                                    <a href="warning" class="mx-1 fa-solid fa-question text-warning"></a>
+                                                    <a href="warning"
+                                                       class="mx-1 fa-solid fa-question text-warning"
+                                                       data-bs-toggle="modal"
+                                                       data-bs-target="#exampleModal"></a>
+                                                    <div class="modal fade"
+                                                         id="exampleModal"
+                                                         tabindex="-1"
+                                                         aria-labelledby="exampleModalLabel"
+                                                         aria-hidden="true">
+                                                        <form class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="exampleModalLabel">Новый результат</h5>
+                                                                    <button type="button"
+                                                                            class="btn-close"
+                                                                            data-bs-dismiss="modal"
+                                                                            aria-label="Закрыть"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <input type="text" class="form-control" placeholder="Результат" list="results"/>
+                                                                    <datalist id="results">
+                                                                        <option>Volvo</option>
+                                                                        <option>Volva</option>
+                                                                    </datalist>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                                                    <button type="button" class="btn btn-primary">Сохранить</button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 {% else %}
                                                     <i class="mx-1 text-secondary fa-solid fa-thumbs-up"></i>
                                                     <i class="mx-1 text-secondary fa-solid fa-thumbs-down"></i>
