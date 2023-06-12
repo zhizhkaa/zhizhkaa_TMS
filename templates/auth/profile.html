@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="mx-5 p-5">
+        <div class="d-flex flex-row align-items-center">
+            <h2 class="me-2">Профиль</h2>
+        </div>
+        <hr>
+        {% if user.is_authenticated %}
+            <div>
+                <p>Логин: {{ user.username }}</p>
+                <p>Имя: {{ user.first_name }} {{ user.last_name }}</p>
+                <p>Email: {{ user.email }}</p>
+                <p>Роль: {{ user.groups.all.0 }}</p>
+            {% else %}
+                <a href="{% url django.contrib.auth.login %}">Login</a>
+            </div>
+        {% endif %}
+        <hr>
+        <h4>Изменить пароль</h4>
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit">Save changes</button>
+        </form>
+    </div>
+{% endblock content %}

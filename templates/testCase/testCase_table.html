@@ -1,34 +1,33 @@
 {% block testCaseTable %}
-        {% if suite_test_list %}
-            {% for suite_name, test_list in suite_test_list.items %}           
-                {% if test_list %}
-                    <div class="collapse show" id="collapse_{{ forloop.counter }}">
-
-                        <Strong id="title">{{ suite_name.title }}</strong>
-
-                        {% for test in test_list %}
-                            {% with projectAcronym=test.project.acronym %}
-                                <div class="d-flex flex-row">
-                                    <input type="checkbox" name="testSelect">
-                                    <a class="d-flex flex-row text-decoration-none"
-                                       href=""
-                                       data-bs-toggle="modal"
-                                       data-bs-target="#testCaseModal_{{ test.id }}">
-                                        <div class="mx-2 text-secondary">{{ projectAcronym }}-{{ test.id }}</div>
-                                        <div class="mx-1">{{ test.title }}</div>
-                                    </a>
-                                </div>
-                                <hr class="m-1">
-                                {% include 'testCase/testCase_modal.html' %}
-                                {% block testCaseModal %}
-                                {% endblock testCaseModal %}
-                            {% endwith %}
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            <div>Нет тестов :(</div>
-        {% endif %}
-
+    {% if suite_test_list %}
+        {% for suite_name, test_list in suite_test_list.items %}
+            {% if test_list %}
+                <div id="toolbar">
+                    <strong id="title">{{ suite_name.title }}</strong>
+                </div>
+                <div class="collapse show" id="collapse_{{ forloop.counter }}">
+                    <table id="table"
+                           data-toggle="table"
+                           data-id-field="id">
+                        <thead>
+                            <th data-sortable="true" data-width="100">Код</th>
+                            <th data-sortable="true">Название</th>
+                        </thead>
+                        <tbody>
+                            {% for test in test_list %}
+                                {% with projectAcronym=test.project.acronym %}
+                                    <tr>
+                                        <th data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ projectAcronym }}-{{ test.id }}</th>
+                                        <th data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ test.title }}</th>
+                                    </tr>
+                                {% endwith %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div>Нет тестов :(</div>
+    {% endif %}
 {% endblock %}

@@ -5,28 +5,7 @@
                 <i class="fa fa-trash"></i> Удалить
             </button>
         </div>
-        <div class="modal fade"
-             id="createTestCase"
-             tabindex="-1"
-             aria-labelledby="createTestCaseLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="createTestCaseLabel">Modal title</h5>
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">...</div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
         <hr class="m-1">
         {% csrf_token %}
         <form>
@@ -58,14 +37,11 @@
                     {% for suite_name, test_list in suite_test_list.items %}
                         {% if test_list %}
                             {% for test in test_list %}
-                            
                                 <tr>
                                     {% with projectAcronym=test.project.acronym %}
                                         <td></td>
-                                        <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ projectAcronym }}
-                                        </td>
-                                        <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ test.id }}
-                                        </td>
+                                        <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ projectAcronym }}</td>
+                                        <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ test.id }}</td>
                                         <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ test.title }}</td>
                                         <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ suite_name.title }}</td>
                                         <td data-bs-toggle="modal" data-bs-target="#testCaseModal_{{ test.id }}">{{ test.type }}</td>
@@ -89,7 +65,6 @@
                                         <td>{{ test.created_date }}</td>
                                     {% endwith %}
                                 </tr>
-
                                 {% include 'testCase/testCase_modal.html' %}
                                 {% block testCaseModal %}
                                 {% endblock testCaseModal %}

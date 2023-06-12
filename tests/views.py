@@ -2,12 +2,16 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from .models import TestCasePlans, TestCaseResults, TestCaseTags, TestPlans, UserProjects, Projects, TestCases, TestSuites, TestCaseSteps
+from .models import TestCasePlans, TestCaseResults, TestCaseTags, TestPlans, TestPriorities, TestStatuses, TestTypes, UserProjects, Projects, TestCases, TestSuites, TestCaseSteps
 from django.contrib.auth.models import User
 
 from django.contrib.auth.decorators import login_required
 from django.template.defaulttags import register
 from django.db.models import Q
+
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 @register.filter
@@ -256,6 +260,8 @@ def delete_suite(request, project_pk, suite_name):
     suite.delete()
     return HttpResponseRedirect(reverse('project_view', args=[project_pk]))
 
+
+
 def login_view(request):
     print("Логин")
     return render(request, 'auth/login.html', { })
@@ -265,5 +271,41 @@ def restore_view(request):
     return render(request, 'auth/password_restore.html', { })
 
 def new_test(request):
-    print("Новый тест")
-    return render(request, 'new_test.html', {})
+    projects = UserProjects.objects.filter(user=request.user)
+
+    project_suites = dict()
+
+    for p in projects:
+        q = TestSuites.objects.filter(project=p.project)
+        if q:
+            project_suites[p.project.name] = q
+
+    types = TestTypes.objects.all()
+    priorities = TestPriorities.objects.all()
+    status = TestStatuses.objects.all()
+
+    return render(request, 'new_test.html', {'project_suites' : project_suites, 
+                                             'types' : types,
+                                             'priorities' : priorities,
+                                             'statuses' : status})
+
+def profile(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Вы успешно сменили пароль!')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Ошибка.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'auth/profile.html', {
+        'form': form
+    })
+
+def delete_testPlan(request, project_pk, suite_name):
+    suite = TestPlans.objects.filter(project__id=project_pk, title=suite_name)
+    suite.delete()
+    return HttpResponseRedirect(reverse('test_plans', args=[project_pk]))

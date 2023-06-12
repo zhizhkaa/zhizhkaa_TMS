@@ -46,41 +46,45 @@
                 <h5>Параметры</h5>
                 <div class="my-2 d-flex align-items-center">
                     <div>
-                        <div>Проект</div>
-                        <select id="project" class="selectpicker" aria-label="Проект">
-                            <option value="1">One</option>
-                        </select>
-                    </div>
-                    <div>
                         <div>Набор</div>
-                        <select id="project" class="selectpicker" aria-label="Набор">
-                            <option value="1">One</option>
+                        <select class="selectpicker" data-style="btn-outline-secondary">
+                            {% for project, suite_list in project_suites.items %}
+                                <optgroup label="{{ project }}">
+                                    {% for suite in suite_list %}<option value="{{ suite.id }}">{{ suite.name }}</option>{% endfor %}
+                                </optgroup>
+                            {% endfor %}
                         </select>
-                    </div>
-                    <div class="form-check my-2">
-                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                        <label class="form-check-label" for="exampleCheck1">Автоматизирован</label>
                     </div>
                 </div>
                 <div class="my-2 d-flex flex-row align-items-center">
-                    <div>
+                    <div class="me-2">
                         <div>Тип теста</div>
-                        <select id="project" class="selectpicker" aria-label="Проект">
-                            <option>One</option>
+                        <select id="project" class="selectpicker" data-style="btn-outline-secondary">
+                            {% for t in types %}
+                            <option>{{ t }}</option>
+                            {% endfor %}
                         </select>
                     </div>
-                    <div>
+                    <div class="me-2">
                         <div>Приоритет</div>
-                        <select id="project" class="selectpicker" aria-label="Набор">
-                            <option value="1">One</option>
+                        <select id="project" class="selectpicker" data-style="btn-outline-secondary">
+                            {% for p in priorities %}
+                            <option>{{ p }}</option>
+                            {% endfor %}
                         </select>
                     </div>
-                    <div>
+                    <div class="me-2">
                         <div>Статус</div>
-                        <select id="project" class="selectpicker" aria-label="Набор">
-                            <option value="1">One</option>
+                        <select id="project" class="selectpicker" data-style="btn-outline-secondary">
+                            {% for s in statuses %}
+                            <option>{{ s }}</option>
+                            {% endfor %}
                         </select>
                     </div>
+                </div>
+                <div class="form-check mt-3">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label" for="exampleCheck1">Автоматизирован</label>
                 </div>
             </div>
             <div id="steps_list" class="my-2">
@@ -88,7 +92,10 @@
                     <hr>
                     <div class="d-flex">
                         <h5 class="me-2">Шаги</h5>
-                        <input type="button" value="Шаг +" class="add btn btn-sm btn-primary" id="add" />
+                        <input type="button"
+                               value="Шаг +"
+                               class="add btn btn-sm btn-primary"
+                               id="add" />
                     </div>
                 </fieldset>
                 <!--<div class="form-group my-2 d-flex align-items-center">
@@ -97,9 +104,10 @@
                     <input type="text" class="form-control" id="step_1" placeholder="Ожидаемый результат">
 </div>-->
             </div>
+            <hr>
             <button type="submit" class="btn btn-primary">Сохранить</button>
             <button type="submit_new" class="btn btn-outline-secondary">Сохранить и создать ещё</button>
-            <button type="cancel" class="btn btn-outline-danger">Закрыть</button>
+            <button type="reset" class="btn btn-outline-danger">Закрыть</button>
         </form>
         <script>
             $(document).ready(function() {

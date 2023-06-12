@@ -2,12 +2,13 @@
 {% block content %}
     <div class="mx-5 p-5">
         <h2>Тест-планы</h2>
-        <div class="d-inline-flex flex-row align-items-center p-1">
+        <div class="p-1">
             <!-- Кнопка "Новый проект"-->
+            <div>
             <button type="button"
                     class="btn btn-primary btn-sm text-nowrap my-2"
                     data-bs-toggle="modal"
-                    data-bs-target="#newTestPlan">Новый тест-план +</button>
+                    data-bs-target="#newTestPlan">Новый тест-план +</button></div>
             <!-- Модал "Новый тест-план" -->
             {% block new_testPlan %}
                 {% include 'projects/modals/new_testPlan.html' %}

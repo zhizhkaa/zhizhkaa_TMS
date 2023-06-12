@@ -3,7 +3,8 @@
     <div class="container-fluid">
             <a class="navbar-brand" href="#">
                     {% load static %}
-                    <img src="{% static '/icon.png' %}" alt="" height=30 width=30>
+                    
+                    <img src="{% static 'images/icon.png' %}" alt="TMS Icon" width="40" height="40">
                     TMS
             </a>
             <button class="navbar-toggler"
@@ -29,7 +30,7 @@
                             aria-expanded="false">ЛК</button>
                     <ul class="dropdown-menu dropdown-menu-lg-end">
                             <li>
-                                    <a class="dropdown-item" href="#">Профиль</a>
+                                    <a class="dropdown-item" href="{% url 'profile' %}">Профиль</a>
                             </li>
                             <li>
                                     <a class="dropdown-item" href="#">Помощь</a>
